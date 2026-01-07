@@ -10,6 +10,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-sf-regular: var(--font-sf-compact-regular);
+  --font-sf-medium: var(--font-sf-compact-medium);
+  --font-sf-semibold: var(--font-sf-compact-semibold);
+  --font-sf-bold: var(--font-sf-compact-bold);
 }
 
 @media (prefers-color-scheme: dark) {

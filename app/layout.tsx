@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import {
   SFCompactRegular,
+  SFCompactMedium,
   SFCompactSemibold,
   SFCompactBold,
 } from "@/utils/helpers/font";
@@ -19,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${SFCompactRegular.variable} ${SFCompactSemibold.variable} ${SFCompactBold.variable} antialiased`}
+        className={`${SFCompactRegular.variable}  ${SFCompactMedium.variable} ${SFCompactSemibold.variable} ${SFCompactBold.variable} antialiased`}
       >
         {children}
       </body>
