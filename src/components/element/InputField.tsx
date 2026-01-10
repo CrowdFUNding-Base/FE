@@ -1,6 +1,6 @@
-import { IoAddCircle } from "react-icons/io5";
-
 type InputVariant = | 'default' | 'search';
+
+type InputType = 'text' | 'password' | 'email' | 'search';
 
 type InputFieldProps = {
   label?: string;
@@ -8,7 +8,13 @@ type InputFieldProps = {
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+
   variant?: InputVariant;
+  type?: InputType;
+
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+
   error?: boolean;
   disabled?: boolean;
 };
@@ -34,7 +40,10 @@ export default function InputField({
   placeholder = 'input',
   value,
   onChange,
+  type = 'text',
   variant = 'default',
+  leftIcon,
+  rightIcon,
   error = false,
   disabled = false,
 }: InputFieldProps) {
@@ -90,18 +99,17 @@ export default function InputField({
           `}
           `}
         >
-        <IoAddCircle 
-          className={`
-          w-6 h-6 
-          transition-all
-          duration-200 ease-out
-          group-focus-within:rotate-90
-          `}
-          style={{ color: iconColor }} 
-          />
+        {leftIcon && (
+          <span
+            className="w-6 h-6 flex items-center justify-center"
+            style={{ color: iconColor }}
+          >
+            {leftIcon}
+          </span>
+        )}
         <input
+          type={type}
           disabled={disabled}
-          value={value ?? ''}
           onChange={onChange}
           placeholder={placeholder}
           className="
@@ -114,15 +122,14 @@ export default function InputField({
             disabled:cursor-not-allowed
           "
         />
-        <IoAddCircle 
-          className={`
-          w-6 h-6 
-          transition-all
-          duration-200 ease-out
-          group-focus-within:rotate-90
-          `}
-          style={{ color: iconColor }} 
-          />
+        {rightIcon && (
+          <span
+            className="w-6 h-6 flex items-center justify-center"
+            style={{ color: iconColor }}
+          >
+            {rightIcon}
+          </span>
+        )}
       </div>
 
       {/* Helper */}
