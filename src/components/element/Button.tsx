@@ -89,9 +89,9 @@ export default function Button({
         focus-visible:outline-none
         focus-visible:after:content-['']
         focus-visible:after:absolute
-        focus-visible:after:left-[14px]
-        focus-visible:after:w-[6px]
-        focus-visible:after:h-[6px]
+        focus-visible:after:left-3.5
+        focus-visible:after:w-1.5
+        focus-visible:after:h-1.5
         focus-visible:after:rounded-full
         disabled:cursor-not-allowed
         ${sizeClasses[size]}
