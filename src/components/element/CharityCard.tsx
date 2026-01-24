@@ -1,0 +1,227 @@
+'use client';
+
+import { useState } from 'react';
+import Image from 'next/image';
+import { cn } from '@/utils/helpers/cn';
+import { ArrowUpRight, Flame } from 'lucide-react';
+
+type CharityCoinProps = {
+  index: number;
+  isCollected: boolean;
+  size?: 'sm' | 'md';
+};
+
+function CharityCoin({ index, isCollected, size = 'md' }: CharityCoinProps) {
+  const [imageError, setImageError] = useState(false);
+  
+  const sizeClasses = {
+    sm: 'w-10 h-10',
+    md: 'w-12 h-12',
+  };
+
+  const fallbackBg = isCollected 
+    ? 'bg-gradient-to-br from-yellow-400 to-yellow-600' 
+    : 'bg-gray-200 border-2 border-gray-300';
+
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <div
+        className={cn(
+          'rounded-full flex items-center justify-center overflow-hidden',
+          sizeClasses[size],
+          imageError && fallbackBg
+        )}
+      >
+        {!imageError && isCollected ? (
+          <Image
+            src="/assets/images/charity-coin.svg"
+            alt="Charity Coin"
+            width={size === 'md' ? 48 : 40}
+            height={size === 'md' ? 48 : 40}
+            className="w-full h-full object-cover"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className={cn(
+            'w-full h-full rounded-full flex items-center justify-center',
+            fallbackBg
+          )}>
+            {isCollected && (
+              <span className="text-yellow-900 text-lg">★</span>
+            )}
+          </div>
+        )}
+      </div>
+      <span className={cn(
+        'text-sm font-sf-medium',
+        isCollected ? 'text-gray-800' : 'text-gray-400'
+      )}>
+        {index}
+      </span>
+    </div>
+  );
+}
+
+type CharityCardVariant = 'full' | 'compact';
+
+type CharityCardProps = {
+  collected: number;
+  streak?: number;
+  totalDays?: number;
+  variant?: CharityCardVariant;
+  className?: string;
+  onArrowClick?: () => void;
+};
+
+export default function CharityCard({
+  collected = 0,
+  streak,
+  totalDays = 7,
+  variant = 'full',
+  className,
+  onArrowClick,
+}: CharityCardProps) {
+  const collectedDays = Array.from({ length: totalDays }, (_, i) => i + 1 <= collected);
+
+  if (variant === 'compact') {
+    return (
+      <div
+        className={cn(
+          'bg-yellow-100 rounded-[20px] p-5 w-full max-w-[480px]',
+          'shadow-[0px_4px_12px_rgba(0,0,0,0.05)]',
+          className
+        )}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-sf-bold text-gray-900">Charity Coins</h3>
+          <button
+            onClick={onArrowClick}
+            className="p-1 hover:bg-black/5 rounded-full transition-colors"
+          >
+            <ArrowUpRight className="w-5 h-5 text-gray-700" />
+          </button>
+        </div>
+
+        {/* Collected Badge */}
+        <div className="flex justify-center mb-5">
+          <div className="bg-[#F5D98E] px-6 py-2.5 rounded-full flex items-center gap-2">
+            <span className="text-yellow-600 text-lg">★</span>
+            <span className="text-lg font-sf-semibold text-gray-800">
+              {collected} Collected
+            </span>
+          </div>
+        </div>
+
+        {/* Coins Row */}
+        <div className="flex items-center justify-between px-2">
+          {collectedDays.map((isCollected, index) => (
+            <CharityCoin
+              key={index}
+              index={index + 1}
+              isCollected={isCollected}
+              size="md"
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Full variant
+  return (
+    <div
+      className={cn(
+        'bg-[#FFF5E0] rounded-[20px] p-5 w-full max-w-[480px]',
+        'shadow-[0px_4px_12px_rgba(0,0,0,0.05)]',
+        className
+      )}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-sf-bold text-gray-900">Charity Coins</h3>
+        <button
+          onClick={onArrowClick}
+          className="p-1 hover:bg-black/5 rounded-full transition-colors"
+        >
+          <ArrowUpRight className="w-5 h-5 text-gray-700" />
+        </button>
+      </div>
+
+      {/* Badges Row */}
+      <div className="flex items-center gap-3 mb-5">
+        <div className="bg-yellow-300 px-4 py-2 rounded-full flex items-center gap-2">
+          <span className="text-yellow-600 text-lg">★</span>
+          <span className="text-base font-sf-semibold text-gray-800">
+            {collected} Collected
+          </span>
+        </div>
+        {streak !== undefined && (
+          <div className="bg-yellow-100 border border-yellow-300 px-4 py-2 rounded-full flex items-center gap-2">
+            <Flame className="w-5 h-5 text-orange-500" />
+            <span className="text-base font-sf-semibold text-gray-800">
+              {streak} Streak
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Coins Row */}
+      <div className="flex items-center justify-between px-2">
+        {collectedDays.map((isCollected, index) => (
+          <CharityCoin
+            key={index}
+            index={index + 1}
+            isCollected={isCollected}
+            size="md"
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Simple coin display component for use elsewhere
+type CoinDisplayProps = {
+  count: number;
+  showLabel?: boolean;
+  size?: 'sm' | 'md';
+  className?: string;
+};
+
+export function CoinDisplay({ count, showLabel = true, size = 'sm', className }: CoinDisplayProps) {
+  const [imageError, setImageError] = useState(false);
+  
+  const sizeClasses = {
+    sm: 'w-8 h-8',
+    md: 'w-10 h-10',
+  };
+
+  return (
+    <div className={cn('flex items-center gap-2', className)}>
+      <div
+        className={cn(
+          'rounded-full flex items-center justify-center overflow-hidden',
+          sizeClasses[size],
+          imageError && 'bg-linear-to-br from-yellow-400 to-yellow-600'
+        )}
+      >
+        {!imageError ? (
+          <Image
+            src="/assets/images/charity-coin.svg"
+            alt="Charity Coin"
+            width={size === 'md' ? 40 : 32}
+            height={size === 'md' ? 40 : 32}
+            className="w-full h-full object-cover"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <span className="text-yellow-900 text-sm">★</span>
+        )}
+      </div>
+      {showLabel && (
+        <span className="text-lg font-sf-semibold text-gray-800">{count}</span>
+      )}
+    </div>
+  );
+}
