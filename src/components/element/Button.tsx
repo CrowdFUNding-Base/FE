@@ -10,19 +10,18 @@ const buttonVariants = cva(
     font-sf-medium
     relative shrink-0
     transition-all duration-200 ease-out
-    focus-visible:outline-none
-    focus-visible:after:content-['']
-    focus-visible:after:absolute
-    focus-visible:after:left-3.5
-    focus-visible:after:w-1.5
-    focus-visible:after:h-1.5
-    focus-visible:after:rounded-full
     disabled:cursor-not-allowed
     [&_svg]:shrink-0
   `,
   {
     variants: {
       size: {
+        rounded: `
+          w-fit h-10
+          rounded-full
+          px-[14px] gap-2
+          text-sm
+        `,
         sm: `
           min-w-[113px] h-[40px]
           rounded-[14px]
@@ -56,12 +55,27 @@ const buttonVariants = cva(
         `,
       },
       variant: {
+        rounded: `
+          bg-blue-50 text-black
+          active:bg-blue-100
+          disabled:text-neutral-400
+          focus-visible:outline-none
+          focus-visible:border-1
+          focus-visible:border-[#A6A6A6]
+        `,
         primary: `
           bg-blue-500 text-white
           hover:bg-blue-400
           active:bg-[#0062cc]
           disabled:bg-[#c2dfff]
           focus-visible:after:bg-white
+          focus-visible:outline-none
+          focus-visible:after:content-['']
+          focus-visible:after:absolute
+          focus-visible:after:left-3.5
+          focus-visible:after:w-1.5
+          focus-visible:after:h-1.5
+          focus-visible:after:rounded-full
           shadow-[0px_8px_20px_rgba(0,0,0,0.05),0px_2px_6px_rgba(0,0,0,0.03)]
           before:absolute before:inset-0 before:rounded-[14px]
           before:shadow-[inset_0px_1px_2px_rgba(255,255,255,0.7),inset_0px_-2px_3px_rgba(0,0,0,0.1)]
@@ -72,6 +86,13 @@ const buttonVariants = cva(
           active:bg-[#8FC4FF]
           disabled:text-[#8FC4FF]
           focus-visible:after:bg-[#0062cc]
+          focus-visible:outline-none
+          focus-visible:after:content-['']
+          focus-visible:after:absolute
+          focus-visible:after:left-3.5
+          focus-visible:after:w-1.5
+          focus-visible:after:h-1.5
+          focus-visible:after:rounded-full
           shadow-[0px_8px_20px_rgba(0,0,0,0.1),0px_2px_6px_rgba(0,0,0,0.15)]
           before:absolute before:inset-0 before:rounded-[14px]
           before:shadow-[inset_0px_1px_2px_rgba(255,255,255,0.7),inset_0px_-2px_3px_rgba(0,0,0,0.1)]
@@ -82,6 +103,13 @@ const buttonVariants = cva(
           active:bg-[#262626]
           disabled:bg-[#A6A6A6]
           focus-visible:after:bg-white
+          focus-visible:outline-none
+          focus-visible:after:content-['']
+          focus-visible:after:absolute
+          focus-visible:after:left-3.5
+          focus-visible:after:w-1.5
+          focus-visible:after:h-1.5
+          focus-visible:after:rounded-full
           shadow-[0px_8px_20px_rgba(0,0,0,0.1),0px_2px_6px_rgba(0,0,0,0.15)]
           before:absolute before:inset-0 before:rounded-[14px]
           before:shadow-[inset_0px_1px_2px_rgba(255,255,255,0.7),inset_0px_-2px_3px_rgba(0,0,0,0.1)]
