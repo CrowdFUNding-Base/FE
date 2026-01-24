@@ -47,6 +47,13 @@ const buttonVariants = cva(
           focus-visible:pl-[32px]
           focus-visible:min-w-[155px]
         `,
+        wallet: `
+          w-full max-w-[320px] h-[56px]
+          rounded-[16px]
+          px-5 gap-2
+          text-base
+          justify-between
+        `,
       },
       variant: {
         primary: `
@@ -78,6 +85,15 @@ const buttonVariants = cva(
           shadow-[0px_8px_20px_rgba(0,0,0,0.1),0px_2px_6px_rgba(0,0,0,0.15)]
           before:absolute before:inset-0 before:rounded-[14px]
           before:shadow-[inset_0px_1px_2px_rgba(255,255,255,0.7),inset_0px_-2px_3px_rgba(0,0,0,0.1)]
+        `,
+        wallet: `
+          bg-[#3A8B9A] text-white
+          hover:bg-[#2E7A89]
+          active:bg-[#256E7C]
+          focus-visible:after:bg-white
+          shadow-[0px_8px_20px_rgba(0,0,0,0.1),0px_2px_6px_rgba(0,0,0,0.15)]
+          before:absolute before:inset-0 before:rounded-[16px]
+          before:shadow-[inset_0px_1px_2px_rgba(255,255,255,0.2),inset_0px_-2px_3px_rgba(0,0,0,0.1)]
         `,
       },
     },

@@ -6,6 +6,7 @@ import {
   SFCompactSemibold,
   SFCompactBold,
 } from "@/utils/helpers/font";
+import Web3Provider from "@/components/Contexts/Web3Provider";
 
 export const metadata: Metadata = {
   title: "crowdFUNding",
@@ -22,7 +23,7 @@ export default function RootLayout({
       <body
         className={`${SFCompactRegular.variable}  ${SFCompactMedium.variable} ${SFCompactSemibold.variable} ${SFCompactBold.variable} antialiased`}
       >
-        {children}
+        <Web3Provider>{children}</Web3Provider>
       </body>
     </html>
   );
