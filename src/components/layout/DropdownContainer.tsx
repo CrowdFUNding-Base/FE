@@ -1,12 +1,12 @@
-type DropdownMenuProps = {
+type DropdownContainerProps = {
   children: React.ReactNode;
 };
 
-export default function DropdownMenu({ children }: DropdownMenuProps) {
+export default function DropdownContainer({ children }: DropdownContainerProps) {
   return (
     <div
       className="
-        w-56
+        w-auto
         rounded-[12.5px]
         p-[3px]
         bg-white
