@@ -17,6 +17,7 @@ type InputFieldProps = {
 
   error?: boolean;
   disabled?: boolean;
+  className?: string;
 };
 
 const variantClasses: Record<InputVariant, string> = {
@@ -46,6 +47,7 @@ export default function InputField({
   rightIcon,
   error = false,
   disabled = false,
+  className = '',
 }: InputFieldProps) {
 
   const isFilled = Boolean(value && value.length > 0);
@@ -55,7 +57,7 @@ export default function InputField({
     return '#666666';
   })();
   return (
-    <div className="flex flex-col gap-1.5 w-[256px]">
+    <div className={`flex flex-col gap-1.5 w-[256px] ${className}`}>
       {/* Label */}
       <label className="
         text-base

@@ -5,7 +5,7 @@ import { useAccount, useDisconnect, useChainId, useReadContract } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { cn } from '@/utils/helpers/cn';
-import { ArrowUpRight, LogOut, Copy, Check } from 'lucide-react';
+import { ArrowUpRight, LogOut, Copy, Check, EyeClosed } from 'lucide-react';
 import { IoEye, IoEyeOff } from 'react-icons/io5';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Button } from './Button';
@@ -137,14 +137,14 @@ export default function WalletButton({ className }: WalletButtonProps) {
   }
 
   return (
-    <div ref={menuRef} className="relative">
+    <div ref={menuRef} className="relative w-full">
       <div
         role="button"
         tabIndex={0}
         className={cn(
           'flex items-center justify-between',
-          'w-full max-w-[320px] h-14',
-          'rounded-2xl px-5',
+          'w-auto h-14',
+          'rounded-3xl px-5',
           'font-sf-medium text-white',
           'bg-cyan-700',
           'transition-all duration-200 ease-out',
@@ -176,7 +176,7 @@ export default function WalletButton({ className }: WalletButtonProps) {
                   {isBalanceVisible ? (
                     <IoEye className="w-4 h-4 text-white" />
                   ) : (
-                    <IoEyeOff className="w-4 h-4 text-white" />
+                    <EyeClosed className="w-4 h-4 text-white" />
                   )}
                 </motion.div>
               </AnimatePresence>
@@ -197,14 +197,14 @@ export default function WalletButton({ className }: WalletButtonProps) {
               isMenuOpen && 'bg-white/10'
             )}
           >
-            <ArrowUpRight className={cn('w-5 h-5 transition-transform', isMenuOpen && 'rotate-90')} />
+            <ArrowUpRight className={cn('w-5 h-5 transition-transform', isMenuOpen && 'rotate-180')} />
           </div>
         </div>
       </div>
 
       {/* Dropdown Menu */}
       {isMenuOpen && (
-        <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50">
+        <div className="relative top-full mt-1 min-w-48 w-48 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50">
           {/* Address */}
           <div className="px-4 py-3 border-b border-gray-100">
             <p className="text-xs text-gray-500 mb-1">Connected Wallet</p>

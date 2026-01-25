@@ -15,8 +15,8 @@ function CharityCoin({ index, isCollected, size = 'md' }: CharityCoinProps) {
   const [imageError, setImageError] = useState(false);
   
   const sizeClasses = {
-    sm: 'w-10 h-10',
-    md: 'w-12 h-12',
+    sm: 'w-6 h-6',
+    md: 'w-8.5 h-8.5',
   };
 
   const fallbackBg = isCollected 
@@ -114,7 +114,7 @@ export default function CharityCard({
     return (
       <div
         className={cn(
-          'bg-yellow-100 rounded-[20px] p-5 w-full max-w-[480px]',
+          'bg-yellow-100 rounded-[20px] p-5 w-full max-w-120',
           'shadow-[0px_4px_12px_rgba(0,0,0,0.05)]',
           className
         )}
@@ -242,8 +242,8 @@ export function CoinDisplay({ count, showLabel = true, size = 'sm', className }:
   const [imageError, setImageError] = useState(false);
   
   const sizeClasses = {
-    sm: 'w-8 h-8',
-    md: 'w-10 h-10',
+    sm: 'w-6 h-6',
+    md: 'w-8.5 h-8.5',
   };
 
   return (
@@ -259,8 +259,8 @@ export function CoinDisplay({ count, showLabel = true, size = 'sm', className }:
           <Image
             src="/assets/images/charity-coin.svg"
             alt="Charity Coin"
-            width={size === 'md' ? 40 : 32}
-            height={size === 'md' ? 40 : 32}
+            width={size === 'md' ? 34 : 24}
+            height={size === 'md' ? 34 : 24}
             className="w-full h-full object-cover pointer-events-none"
             draggable={false}
             onError={() => setImageError(true)}
