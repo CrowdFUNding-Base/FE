@@ -53,6 +53,12 @@ const buttonVariants = cva(
           text-base
           justify-between
         `,
+        tips: `
+          h-9
+          rounded-xl
+          px-3 gap-1.5
+          text-sm
+        `,
       },
       variant: {
         rounded: `
@@ -122,6 +128,12 @@ const buttonVariants = cva(
           shadow-[0px_8px_20px_rgba(0,0,0,0.1),0px_2px_6px_rgba(0,0,0,0.15)]
           before:absolute before:inset-0 before:rounded-[16px]
           before:shadow-[inset_0px_1px_2px_rgba(255,255,255,0.2),inset_0px_-2px_3px_rgba(0,0,0,0.1)]
+        `,
+        tips: `
+          bg-[#2C2C2C] text-white
+          hover:bg-[#3A3A3A]
+          active:bg-[#1A1A1A]
+          shadow-[0px_4px_12px_rgba(0,0,0,0.15)]
         `,
       },
     },
