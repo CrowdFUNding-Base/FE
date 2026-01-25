@@ -1,0 +1,65 @@
+[
+  {
+    "id": "1",
+    "imageUrl": "/assets/images/placeholder.webp",
+    "title": "Bantu Korban Banjir Bandang",
+    "description": "Membantu korban banjir bandang di daerah Bogor",
+    "progress": 75,
+    "tags": ["bencana", "banjir", "prioritas"],
+    "creator": "Yayasan Peduli Sesama"
+  },
+  {
+    "id": "2",
+    "imageUrl": "/assets/images/placeholder.webp",
+    "title": "Beasiswa Anak Yatim Piatu",
+    "description": "Program beasiswa untuk anak yatim piatu berprestasi",
+    "progress": 45,
+    "tags": ["pendidikan", "beasiswa", "anak yatim"],
+    "creator": "Rumah Yatim Indonesia"
+  },
+  {
+    "id": "3",
+    "imageUrl": "/assets/images/placeholder.webp",
+    "title": "Renovasi Rumah Ibadah",
+    "description": "Perbaikan dan renovasi masjid desa yang rusak",
+    "progress": 60,
+    "tags": ["renovasi", "masjid", "ibadah"],
+    "creator": "DKM Al-Ikhlas"
+  },
+  {
+    "id": "4",
+    "imageUrl": "/assets/images/placeholder.webp",
+    "title": "Pengobatan Gratis untuk Dhuafa",
+    "description": "Layanan kesehatan gratis untuk masyarakat kurang mampu",
+    "progress": 30,
+    "tags": ["kesehatan", "pengobatan", "prioritas"],
+    "creator": "Klinik Sehat Bersama"
+  },
+  {
+    "id": "5",
+    "imageUrl": "/assets/images/placeholder.webp",
+    "title": "Bantuan Sembako Ramadan",
+    "description": "Distribusi sembako untuk keluarga kurang mampu",
+    "progress": 90,
+    "tags": ["sosial", "sembako", "ramadan"],
+    "creator": "Lembaga Zakat Nasional"
+  },
+  {
+    "id": "6",
+    "imageUrl": "/assets/images/placeholder.webp",
+    "title": "Pembangunan Sekolah Daerah Terpencil",
+    "description": "Membangun sekolah di daerah pelosok Indonesia",
+    "progress": 20,
+    "tags": ["pendidikan", "infrastruktur", "prioritas"],
+    "creator": "Gerakan Indonesia Mengajar"
+  },
+  {
+    "id": "7",
+    "imageUrl": "/assets/images/placeholder.webp",
+    "title": "Air Bersih untuk Desa Kering",
+    "description": "Instalasi sumur bor untuk akses air bersih",
+    "progress": 55,
+    "tags": ["infrastruktur", "air bersih", "desa"],
+    "creator": "Aksi Cepat Tanggap"
+  }
+]
