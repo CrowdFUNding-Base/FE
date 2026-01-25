@@ -10,5 +10,6 @@ export { CampaignCard } from './element/CampaignCard';
 export { CircularProgress } from './element/CircularProgress';
 
 export { default as DropdownMenu } from './layout/DropdownContainer';
+export { default as Navbar } from './layout/navbar';
 
 export { default as Web3Provider } from './Contexts/Web3Provider';
