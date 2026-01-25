@@ -23,7 +23,7 @@ const buttonVariants = cva(
           text-sm
         `,
         sm: `
-          min-w-[113px] h-[40px]
+          h-[40px]
           rounded-[14px]
           px-[14px] gap-2
           text-sm
@@ -31,7 +31,7 @@ const buttonVariants = cva(
           focus-visible:min-w-[127px]
         `,
         md: `
-          min-w-[131px] h-[44px]
+          h-[44px]
           rounded-[16px]
           px-[16px] gap-2.5
           text-base
@@ -39,7 +39,7 @@ const buttonVariants = cva(
           focus-visible:min-w-[147px]
         `,
         lg: `
-          min-w-[135px] h-[52px]
+          h-[52px]
           rounded-[18px]
           px-[16px] gap-3
           text-base
