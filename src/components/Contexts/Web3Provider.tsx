@@ -10,8 +10,10 @@ import {
   darkTheme,
   lightTheme,
 } from '@rainbow-me/rainbowkit';
+import { OnchainKitProvider } from '@coinbase/onchainkit';
 
 import '@rainbow-me/rainbowkit/styles.css';
+import '@coinbase/onchainkit/styles.css';
 
 const config = getDefaultConfig({
   appName: 'CrowdFUNding',
@@ -45,7 +47,9 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
           })}
           modalSize="compact"
         >
-          {children}
+          <OnchainKitProvider chain={base}>
+            {children}
+          </OnchainKitProvider>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
