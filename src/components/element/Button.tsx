@@ -99,9 +99,9 @@ const buttonVariants = cva(
           focus-visible:after:w-1.5
           focus-visible:after:h-1.5
           focus-visible:after:rounded-full
-          shadow-[0px_8px_20px_rgba(0,0,0,0.1),0px_2px_6px_rgba(0,0,0,0.15)]
+          shadow-[0px_8px_20px_rgba(0,0,0,0.1),0px_2px_6px_rgba(0,0,0,0.03)]
           before:absolute before:inset-0 before:rounded-[14px]
-          before:shadow-[inset_0px_1px_2px_rgba(255,255,255,0.7),inset_0px_-2px_3px_rgba(0,0,0,0.1)]
+          before:shadow-[inset_0px_1px_2px_rgba(255,255,255,0.7),inset_0px_-2px_3px_rgba(0,0,0,0.05)]
         `,
         black: `
           bg-[#383838] text-white

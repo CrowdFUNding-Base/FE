@@ -1,12 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import { cn } from '@/utils/helpers/cn';
 import { Button } from '@/components/element/Button';
 import { Checkbox } from '@/components/element/Checkbox';
 import { Radio } from '@/components/element/Radio';
 import InputField from '@/components/element/InputField';
 import { CircularProgress } from '@/components/element/CircularProgress';
 import { CampaignCard } from '@/components/element/CampaignCard';
+import Gradient from '@/components/element/Gradient';
+import LoginForm from '@/components/layout/LoginForm';
 import {
   DropdownRoot,
   DropdownButton,
@@ -14,6 +17,7 @@ import {
   DropdownItem,
 } from '@/components/element/Dropdown';
 import { IoSearch, IoMail, IoAdd, IoArrowForward, IoHeart, IoShareSocial } from 'react-icons/io5';
+import Container from '@/components/layout/container';
 
 export default function ComponentShowcase() {
   const [checkboxState, setCheckboxState] = useState(false);
@@ -23,11 +27,38 @@ export default function ComponentShowcase() {
   const [progress, setProgress] = useState(50);
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-50 py-12">
-      <div className="max-w-7xl mx-auto px-6">
+    <main className={cn("relative overflow-x-clip")}>
+      <section className="relative overflow-hidden bg-[#FAFAFA]">
+      <Container className="relative flex flex-col items-center justify-center gap-6 py-6 min-h-96">
+      <Gradient className='-z-10'/>
         <h1 className="text-4xl font-sf-semibold text-zinc-900 dark:text-white mb-12">
           Component Showcase
         </h1>
+
+        {/* Login Form Section */}
+        <section className="mb-16">
+          <h2 className="text-2xl font-sf-semibold text-zinc-900 dark:text-white mb-6">
+            Login Form
+          </h2>
+          
+          <div className="space-y-8">
+            {/* Login Variant */}
+            <div>
+              <h3 className="text-lg font-sf-medium text-zinc-700 dark:text-zinc-300 mb-4">
+                Login Variant
+              </h3>
+              <LoginForm variant="login" onSubmit={(data) => console.log('Login:', data)} />
+            </div>
+
+            {/* Register Variant */}
+            <div>
+              <h3 className="text-lg font-sf-medium text-zinc-700 dark:text-zinc-300 mb-4">
+                Register Variant
+              </h3>
+              <LoginForm variant="register" onSubmit={(data) => console.log('Register:', data)} />
+            </div>
+          </div>
+        </section>
 
         {/* Buttons Section */}
         <section className="mb-16">
@@ -489,7 +520,8 @@ export default function ComponentShowcase() {
             </div>
           </div>
         </section>
-      </div>
-    </div>
+    </Container>
+    </section>
+    </main>
   );
 }

@@ -39,7 +39,7 @@ export default function InputField({
   label = 'Input Label',
   helperText = '',
   placeholder = 'input',
-  value,
+  value = '',
   onChange,
   type = 'text',
   variant = 'default',
@@ -111,6 +111,7 @@ export default function InputField({
         )}
         <input
           type={type}
+          value={value}
           disabled={disabled}
           onChange={onChange}
           placeholder={placeholder}

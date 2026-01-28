@@ -1,15 +1,22 @@
 "use client";
-import { useState } from 'react';
-import Hero from '@/modules/home/Hero';
-import Campaign from '@/modules/home/Campaign';
 
-export default function Home() {
-    const [value, setValue] = useState('');
-    const [show, setShow] = useState(false);
-  return (
-    <div>
-      <Hero />
-      <Campaign />
-    </div>
-  );
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+export default function Page() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const hasVisitedMain = localStorage.getItem("hasVisitedMain");
+    
+    if (hasVisitedMain === "true") {
+      // Sudah pernah buka main page, redirect ke home
+      router.push("/home");
+    } else {
+      // Belum pernah buka main page, redirect ke onboarding
+      router.push("/onboarding");
+    }
+  }, [router]);
+
+  return null;
 }

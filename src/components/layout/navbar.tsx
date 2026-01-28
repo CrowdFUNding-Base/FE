@@ -8,7 +8,7 @@ import { cn } from '@/utils/helpers/cn';
 const navItems = [
   {
     name: 'Home',
-    href: '/',
+    href: '/home',
     icon: House,
   },
   {
@@ -27,9 +27,6 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
-    if (href === '/') {
-      return pathname === '/';
-    }
     return pathname.startsWith(href);
   };
 
