@@ -20,6 +20,7 @@ export default function WalletButton({ className }: WalletButtonProps) {
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [selectedToken, setSelectedToken] = useState<'IDRX' | 'USDC'>('IDRX');
   const menuRef = useRef<HTMLDivElement>(null);
   
   const { address, isConnected } = useAccount();
@@ -27,8 +28,8 @@ export default function WalletButton({ className }: WalletButtonProps) {
   const { openConnectModal } = useConnectModal();
   const currentChainId = useChainId();
   
-  // Get IDRX token balance using direct contract read
-  const { data: balanceData, isError, isLoading, refetch } = useReadContract({
+  // Get IDRX token balance
+  const { data: idrxBalanceData, isError: isIdrxError, isLoading: isIdrxLoading, refetch: refetchIdrx } = useReadContract({
     address: CONTRACTS.baseSepolia.IDRX,
     abi: ERC20_ABI,
     functionName: 'balanceOf',
@@ -40,34 +41,63 @@ export default function WalletButton({ className }: WalletButtonProps) {
     },
   });
 
-  // Get token decimals
-  const { data: decimals } = useReadContract({
+  // Get USDC token balance
+  const { data: usdcBalanceData, isError: isUsdcError, isLoading: isUsdcLoading, refetch: refetchUsdc } = useReadContract({
+    address: CONTRACTS.baseSepolia.USDC,
+    abi: ERC20_ABI,
+    functionName: 'balanceOf',
+    args: address ? [address] : undefined,
+    chainId: baseSepolia.id,
+    query: {
+      enabled: isConnected && !!address,
+      refetchInterval: 10000,
+    },
+  });
+
+  // Get token decimals (IDRX)
+  const { data: idrxDecimals } = useReadContract({
     address: CONTRACTS.baseSepolia.IDRX,
     abi: ERC20_ABI,
     functionName: 'decimals',
     chainId: baseSepolia.id,
   });
 
-  // Refetch balance when chain changes
+  // Get token decimals (USDC)
+  const { data: usdcDecimals } = useReadContract({
+    address: CONTRACTS.baseSepolia.USDC,
+    abi: ERC20_ABI,
+    functionName: 'decimals',
+    chainId: baseSepolia.id,
+  });
+
+  // Refetch balances when chain changes
   useEffect(() => {
     if (isConnected && currentChainId === baseSepolia.id) {
-      refetch();
+      refetchIdrx();
+      refetchUsdc();
     }
-  }, [currentChainId, isConnected, refetch]);
+  }, [currentChainId, isConnected, refetchIdrx, refetchUsdc]);
 
-  // Format balance to IDR format
-  const formatBalance = (value: bigint | undefined, tokenDecimals: number = 2) => {
-    if (!value) return 'IDR 0';
+  // Format balance
+  const formatBalance = (value: bigint | undefined, tokenDecimals: number = 2, symbol: string) => {
+    if (!value) return `${symbol} 0`;
     const numValue = Number(value) / Math.pow(10, tokenDecimals);
-    return `IDR ${numValue.toLocaleString('id-ID')}`;
+    return `${symbol} ${numValue.toLocaleString('id-ID')}`;
   };
 
-  // Display balance with fallback for loading/error states
+  // Display balance based on selected token
   const getDisplayBalance = () => {
-    if (isLoading) return 'Loading...';
-    if (isError || balanceData === undefined) return 'IDR 0';
-    const tokenDecimals = decimals !== undefined ? Number(decimals) : 2;
-    return formatBalance(balanceData as bigint, tokenDecimals);
+    if (selectedToken === 'IDRX') {
+      if (isIdrxLoading) return 'Loading...';
+      if (isIdrxError || idrxBalanceData === undefined) return 'IDR 0';
+      const tokenDecimals = idrxDecimals !== undefined ? Number(idrxDecimals) : 2;
+      return formatBalance(idrxBalanceData as bigint, tokenDecimals, 'IDRX');
+    } else {
+      if (isUsdcLoading) return 'Loading...';
+      if (isUsdcError || usdcBalanceData === undefined) return 'USDC 0';
+      const tokenDecimals = usdcDecimals !== undefined ? Number(usdcDecimals) : 6;
+      return formatBalance(usdcBalanceData as bigint, tokenDecimals, 'USDC');
+    }
   };
 
   const displayBalance = getDisplayBalance();
@@ -212,6 +242,31 @@ export default function WalletButton({ className }: WalletButtonProps) {
               {address && shortenAddress(address)}
             </p>
           </div>
+
+           {/* Token Selector */}
+           <div className="px-4 py-2 border-b border-gray-100 bg-gray-50/50">
+             <p className="text-xs text-gray-500 mb-2">Display Asset</p>
+             <div className="flex gap-2">
+               <button 
+                 onClick={() => setSelectedToken('IDRX')}
+                 className={cn(
+                   "flex-1 py-1 text-xs rounded-md transition-colors",
+                   selectedToken === 'IDRX' ? "bg-cyan-100 text-cyan-700 font-bold" : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+                 )}
+               >
+                 IDR
+               </button>
+               <button 
+                 onClick={() => setSelectedToken('USDC')}
+                 className={cn(
+                   "flex-1 py-1 text-xs rounded-md transition-colors",
+                   selectedToken === 'USDC' ? "bg-cyan-100 text-cyan-700 font-bold" : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+                 )}
+               >
+                 USDC
+               </button>
+             </div>
+           </div>
 
           {/* Menu Items */}
           <div className="py-1">
