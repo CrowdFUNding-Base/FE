@@ -27,6 +27,10 @@ const nextConfig: NextConfig = {
   },
   webpack: (config) => {
     config.resolve.mainFields = ["browser", "module", "main"];
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@react-native-async-storage/async-storage': false,
+    };
     return config;
   },
   pageExtensions: ['ts', 'tsx', 'js', 'jsx'],

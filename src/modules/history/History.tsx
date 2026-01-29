@@ -9,6 +9,7 @@ import { TRANSACTIONS } from './data';
 import Container from '@/components/layout/container';
 import Gradient from '@/components/element/Gradient';
 import { cn } from '@/utils/helpers/cn';
+import { Button } from '@/components/element/Button';
 
 export default function History() {
   const router = useRouter();
@@ -18,20 +19,17 @@ export default function History() {
     <main className="relative h-screen w-full overflow-hidden bg-[#FAFAFA]">
       <Gradient />
       <Container className="relative z-10 h-full flex flex-col px-4 pt-12 max-w-lg mx-auto">
-        {/* Fixed Section */}
-        <div className="flex-none">
-          {/* Header */}
-          <div className="flex items-center mb-6">
-            <button 
-              onClick={() => router.back()}
-              className="p-3 bg-white/20 backdrop-blur-sm rounded-xl text-black border border-white/50 hover:bg-white/40 transition-colors shadow-sm"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <h1 className="flex-1 text-center text-lg font-sf-bold text-gray-900 mr-11">
-              Wallet
-            </h1>
-          </div>
+        {/* Header Section */}
+        <div className="flex-none pt-6">
+          <Button 
+            onClick={() => router.push('/profile')}
+            className="w-10 h-10 p-0 mb-4 rounded-full bg-white/50 backdrop-blur-md hover:bg-white/80 transition shadow-sm self-start"
+            variant="secondary"
+          >
+            <ArrowLeft className="w-6 h-6 text-gray-800" />
+          </Button>
+
+          <h1 className="text-2xl font-bold text-gray-900 mb-6">Transaction History</h1>
 
           <div className="mb-8">
             <WalletCard isConnected={isConnected} />
