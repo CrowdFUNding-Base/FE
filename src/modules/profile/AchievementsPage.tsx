@@ -27,66 +27,70 @@ export default function AchievementsPage() {
   ];
 
   return (
-    <div className="min-h-screen relative overflow-hidden pb-10">
-      <Gradient className="-z-10" />
-      
-      <Container className="pt-6">
-        <Button 
-          onClick={() => router.back()}
-          className="w-10 h-10 p-0 mb-4 rounded-full bg-white/50 backdrop-blur-md hover:bg-white/80 transition shadow-sm self-start"
-          variant="secondary"
-        >
-          <ArrowLeft className="w-6 h-6 text-gray-800" />
-        </Button>
-        <div className="flex flex-col items-center mb-6">
-            <div className="w-24 h-24 relative mb-2">
-                <Image 
-                  src="/assets/images/charity-coin.svg" 
-                  alt="Charity Point" 
-                  fill
-                  className="object-contain"
-                />
-            </div>
-            <h2 className="text-3xl font-bold text-gray-900">{points}</h2>
-            <p className="text-gray-500">Total Charity Points</p>
-        </div>
 
-        <div className="space-y-4">
-            {achievements.map((item) => {
-                const isUnlocked = points >= item.threshold;
-                return (
-                    <div 
-                        key={item.id} 
-                        className={cn(
-                            "p-4 rounded-2xl flex items-center gap-4 transition-all duration-300",
-                            isUnlocked ? "bg-white shadow-md border-l-4 border-green-500" : "bg-white/50 border border-transparent opacity-70 grayscale"
-                        )}
-                    >
-                        <div className={cn(
-                            "w-12 h-12 rounded-full flex items-center justify-center shrink-0",
-                            isUnlocked ? "bg-green-100 text-green-600" : "bg-gray-200 text-gray-400"
-                        )}>
-                            {isUnlocked ? <Trophy className="w-6 h-6" /> : <Trophy className="w-6 h-6" />}
-                        </div>
-                        <div className="flex-1">
-                            <h3 className="font-bold text-gray-900">{item.title}</h3>
-                            <p className="text-sm text-gray-500">{item.desc}</p>
-                        </div>
-                        <div>
-                            {isUnlocked ? (
-                                <CheckCircle className="w-6 h-6 text-green-500" />
-                            ) : (
-                                <div className="flex flex-col items-center">
-                                    <span className="text-xs font-bold text-gray-400">{points}/{item.threshold}</span>
-                                    <Circle className="w-6 h-6 text-gray-300" />
-                                </div>
-                            )}
-                        </div>
+    <div className="min-h-screen w-full bg-white flex justify-center">
+      <div className="w-full max-w-lg bg-[#FAFAFA] relative h-screen overflow-hidden flex flex-col shadow-2xl">
+        <Gradient />
+        <Container className="relative z-10 h-full flex flex-col px-4 pt-6">
+            <div className="flex-1 overflow-y-auto pb-32 scrollbar-hide">
+                <Button 
+                  onClick={() => router.back()}
+                  className="w-10 h-10 p-0 mb-4 rounded-full bg-white/50 backdrop-blur-md hover:bg-white/80 transition shadow-sm self-start"
+                  variant="secondary"
+                >
+                  <ArrowLeft className="w-6 h-6 text-gray-800" />
+                </Button>
+                <div className="flex flex-col items-center mb-6">
+                    <div className="w-24 h-24 relative mb-2">
+                        <Image 
+                          src="/assets/images/charity-coin.svg" 
+                          alt="Charity Point" 
+                          fill
+                          className="object-contain"
+                        />
                     </div>
-                );
-            })}
-        </div>
-      </Container>
+                    <h2 className="text-3xl font-bold text-gray-900">{points}</h2>
+                    <p className="text-gray-500">Total Charity Points</p>
+                </div>
+
+                <div className="space-y-4">
+                    {achievements.map((item) => {
+                        const isUnlocked = points >= item.threshold;
+                        return (
+                            <div 
+                                key={item.id} 
+                                className={cn(
+                                    "p-4 rounded-2xl flex items-center gap-4 transition-all duration-300",
+                                    isUnlocked ? "bg-white shadow-md border-l-4 border-green-500" : "bg-white/50 border border-transparent opacity-70 grayscale"
+                                )}
+                            >
+                                <div className={cn(
+                                    "w-12 h-12 rounded-full flex items-center justify-center shrink-0",
+                                    isUnlocked ? "bg-green-100 text-green-600" : "bg-gray-200 text-gray-400"
+                                )}>
+                                    {isUnlocked ? <Trophy className="w-6 h-6" /> : <Trophy className="w-6 h-6" />}
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="font-bold text-gray-900">{item.title}</h3>
+                                    <p className="text-sm text-gray-500">{item.desc}</p>
+                                </div>
+                                <div>
+                                    {isUnlocked ? (
+                                        <CheckCircle className="w-6 h-6 text-green-500" />
+                                    ) : (
+                                        <div className="flex flex-col items-center">
+                                            <span className="text-xs font-bold text-gray-400">{points}/{item.threshold}</span>
+                                            <Circle className="w-6 h-6 text-gray-300" />
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        </Container>
+      </div>
     </div>
   );
 }

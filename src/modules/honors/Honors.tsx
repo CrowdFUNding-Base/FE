@@ -41,78 +41,82 @@ export default function Honors() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Background */}
-      <div className="fixed inset-0 -z-10">
-        {/* Base gradient */}
-        <div className="absolute inset-0 bg-linear-to-b from-blue-100 via-cyan-50 to-blue-100" />
-        
-        {/* Blur circles */}
-        <div className="absolute top-20 -left-20 w-72 h-72 bg-purple-200/50 rounded-full blur-3xl" />
-        <div className="absolute top-40 right-0 w-80 h-80 bg-cyan-200/50 rounded-full blur-3xl" />
-        <div className="absolute bottom-40 -left-10 w-60 h-60 bg-blue-200/40 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-72 h-72 bg-yellow-100/40 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/30 rounded-full blur-3xl" />
+    <div className="min-h-screen w-full bg-white flex justify-center">
+      <div className="w-full max-w-lg bg-white relative h-screen overflow-hidden flex flex-col shadow-2xl">
+        {/* Background */}
+        <div className="absolute inset-0 -z-10 bg-[#FAFAFA]"> {/* Fallback or base color if needed */}
+            {/* Base gradient */}
+            <div className="absolute inset-0 bg-linear-to-b from-blue-100 via-cyan-50 to-blue-100" />
+            
+            {/* Blur circles */}
+            <div className="absolute top-20 -left-20 w-72 h-72 bg-purple-200/50 rounded-full blur-3xl" />
+            <div className="absolute top-40 right-0 w-80 h-80 bg-cyan-200/50 rounded-full blur-3xl" />
+            <div className="absolute bottom-40 -left-10 w-60 h-60 bg-blue-200/40 rounded-full blur-3xl" />
+            <div className="absolute bottom-20 right-10 w-72 h-72 bg-yellow-100/40 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/30 rounded-full blur-3xl" />
+        </div>
+
+        <Container className="h-full flex flex-col pt-6 px-4">
+            <div className="flex-1 overflow-y-auto pb-32 scrollbar-hide">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-6">
+                <h1 className="text-2xl font-sf-bold text-gray-900">Honors</h1>
+                <Button
+                    variant="black"
+                    size="sm"
+                    leftIcon={<Lightbulb className="w-3.5 h-3.5" />}
+                    onClick={handleTipsClick}
+                    className="px-3.5"
+                >
+                    Tips
+                </Button>
+                </div>
+
+                {/* Honor Cards */}
+                <div className="relative -mx-4 px-4 mb-8"> {/* Adjusted negative margin for smaller container padding */}
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
+                    {honorCards.map((card) => (
+                    <div
+                        key={card.id}
+                        className={cn(
+                        'shrink-0 w-24 h-32 rounded-2xl snap-start',
+                        'shadow-[0px_4px_16px_rgba(0,0,0,0.08)]',
+                        'hover:shadow-[0px_6px_20px_rgba(0,0,0,0.12)]',
+                        'transition-all duration-200 cursor-pointer',
+                        'active:scale-95',
+                        card.color
+                        )}
+                        aria-label={card.label}
+                    />
+                    ))}
+                </div>
+                </div>
+
+                {/* Leaderboard */}
+                <div className="flex flex-col gap-4">
+                <h2 className="text-xl font-sf-bold text-gray-900">Leaderboard</h2>
+
+                {/* Leaderboard List */}
+                <div className="flex flex-col gap-2">
+                    {sortedLeaderboard.map((user, index) => (
+                    <div key={user.id} className="flex items-center gap-3">
+                        <span className="text-xl font-sf-bold text-gray-400 w-6 text-center shrink-0">
+                        {index + 1}
+                        </span>
+                        <LeaderboardCard
+                        name={user.name}
+                        avatarUrl={user.avatarUrl}
+                        coinCount={user.coinCount}
+                        showRank={false}
+                        className="flex-1"
+                        />
+                    </div>
+                    ))}
+                </div>
+                </div>
+            </div>
+        </Container>
       </div>
-
-      <Container className="pb-24">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-sf-bold text-gray-900">Honors</h1>
-          <Button
-            variant="black"
-            size="sm"
-            leftIcon={<Lightbulb className="w-3.5 h-3.5" />}
-            onClick={handleTipsClick}
-            className="px-3.5"
-          >
-            Tips
-          </Button>
-        </div>
-
-        {/* Honor Cards */}
-        <div className="relative -mx-8 px-8">
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
-            {honorCards.map((card) => (
-              <div
-                key={card.id}
-                className={cn(
-                  'shrink-0 w-24 h-32 rounded-2xl snap-start',
-                  'shadow-[0px_4px_16px_rgba(0,0,0,0.08)]',
-                  'hover:shadow-[0px_6px_20px_rgba(0,0,0,0.12)]',
-                  'transition-all duration-200 cursor-pointer',
-                  'active:scale-95',
-                  card.color
-                )}
-                aria-label={card.label}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Leaderboard */}
-        <div className="flex flex-col gap-4">
-          <h2 className="text-xl font-sf-bold text-gray-900">Leaderboard</h2>
-
-          {/* Leaderboard List */}
-          <div className="flex flex-col gap-2 max-h-[calc(100vh-380px)] overflow-y-auto scrollbar-hide">
-            {sortedLeaderboard.map((user, index) => (
-              <div key={user.id} className="flex items-center gap-3">
-                <span className="text-xl font-sf-bold text-gray-400 w-6 text-center shrink-0">
-                  {index + 1}
-                </span>
-                <LeaderboardCard
-                  name={user.name}
-                  avatarUrl={user.avatarUrl}
-                  coinCount={user.coinCount}
-                  showRank={false}
-                  className="flex-1"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </Container>
     </div>
   );
 }

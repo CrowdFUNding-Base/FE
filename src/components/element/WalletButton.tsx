@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useAccount, useDisconnect, useChainId, useReadContract } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -102,17 +103,28 @@ export default function WalletButton({ className }: WalletButtonProps) {
 
   const displayBalance = getDisplayBalance();
 
+  // Ref for the dropdown menu (since it's in a portal)
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      // Check if click is outside both the main button reference AND the dropdown reference
+      const isOutsideMenu = menuRef.current && !menuRef.current.contains(target);
+      const isOutsideDropdown = dropdownRef.current && !dropdownRef.current.contains(target);
+
+      if (isOutsideMenu && isOutsideDropdown) {
         setIsMenuOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [isMenuOpen]);
 
   const handleClick = () => {
     if (!isConnected && openConnectModal) {
@@ -232,64 +244,101 @@ export default function WalletButton({ className }: WalletButtonProps) {
         </div>
       </div>
 
-      {/* Dropdown Menu */}
-      {isMenuOpen && (
-        <div className="relative top-full mt-1 min-w-48 w-48 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden z-50">
-          {/* Address */}
-          <div className="px-4 py-3 border-b border-gray-100">
-            <p className="text-xs text-gray-500 mb-1">Connected Wallet</p>
-            <p className="text-sm font-sf-medium text-gray-800">
-              {address && shortenAddress(address)}
-            </p>
-          </div>
-
-           {/* Token Selector */}
-           <div className="px-4 py-2 border-b border-gray-100 bg-gray-50/50">
-             <p className="text-xs text-gray-500 mb-2">Display Asset</p>
-             <div className="flex gap-2">
-               <button 
-                 onClick={() => setSelectedToken('IDRX')}
-                 className={cn(
-                   "flex-1 py-1 text-xs rounded-md transition-colors",
-                   selectedToken === 'IDRX' ? "bg-cyan-100 text-cyan-700 font-bold" : "bg-gray-200 text-gray-600 hover:bg-gray-300"
-                 )}
-               >
-                 IDR
-               </button>
-               <button 
-                 onClick={() => setSelectedToken('USDC')}
-                 className={cn(
-                   "flex-1 py-1 text-xs rounded-md transition-colors",
-                   selectedToken === 'USDC' ? "bg-cyan-100 text-cyan-700 font-bold" : "bg-gray-200 text-gray-600 hover:bg-gray-300"
-                 )}
-               >
-                 USDC
-               </button>
-             </div>
-           </div>
-
-          {/* Menu Items */}
-          <div className="py-1">
-            <button
-              onClick={handleCopyAddress}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              {isCopied ? (
-                <Check className="w-4 h-4 text-green-500" />
-              ) : (
-                <Copy className="w-4 h-4" />
+      {/* Dropdown Menu - Portaled */}
+      {isMenuOpen && typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+            <motion.div
+              ref={dropdownRef}
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              style={{
+                position: 'fixed',
+                top: menuRef.current ? menuRef.current.getBoundingClientRect().bottom + 12 : 0,
+                left: menuRef.current ? menuRef.current.getBoundingClientRect().right - 280 : 0, // aligning right edge, assuming 280px width
+                zIndex: 9999
+              }}
+              className={cn(
+                  "min-w-[280px] w-auto",
+                  "bg-white/80 backdrop-blur-xl",
+                  "rounded-[32px]",
+                  "shadow-[0px_20px_40px_-10px_rgba(0,0,0,0.1)]",
+                  "border border-white/40",
+                  "overflow-hidden",
+                  "p-2"
               )}
-              <span>{isCopied ? 'Copied!' : 'Copy Address'}</span>
-            </button>
-            <button
-              onClick={handleDisconnect}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
             >
-              <LogOut className="w-4 h-4" />
-              <span>Disconnect</span>
-            </button>
-          </div>
-        </div>
+             <div className="bg-white/50 rounded-[24px] p-4 border border-white/50">
+                  {/* Address */}
+                  <div className="mb-4 text-center">
+                      <p className="text-xs font-sf-regular text-gray-500 mb-1">Connected Wallet</p>
+                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-100/50 rounded-full border border-gray-200/50">
+                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                          <p className="text-sm font-sf-bold text-gray-800 tracking-wide font-mono">
+                          {address && shortenAddress(address)}
+                          </p>
+                      </div>
+                  </div>
+  
+                  {/* Token Selector */}
+                  <div className="bg-gray-50/80 rounded-2xl p-1.5 flex gap-1 mb-2">
+                      <button 
+                          onClick={(e) => { e.stopPropagation(); setSelectedToken('IDRX'); }}
+                          className={cn(
+                          "flex-1 py-2 text-xs font-sf-bold rounded-xl transition-all duration-200",
+                          selectedToken === 'IDRX' 
+                              ? "bg-white text-cyan-700 shadow-sm" 
+                              : "text-gray-400 hover:bg-gray-200/50"
+                          )}
+                      >
+                          IDR
+                      </button>
+                      <button 
+                          onClick={(e) => { e.stopPropagation(); setSelectedToken('USDC'); }}
+                          className={cn(
+                          "flex-1 py-2 text-xs font-sf-bold rounded-xl transition-all duration-200",
+                          selectedToken === 'USDC' 
+                              ? "bg-white text-cyan-700 shadow-sm" 
+                              : "text-gray-400 hover:bg-gray-200/50"
+                          )}
+                      >
+                          USDC
+                      </button>
+                  </div>
+             </div>
+  
+              {/* Menu Items */}
+              <div className="flex flex-col gap-1 mt-2 px-1 pb-1">
+                <button
+                  onClick={handleCopyAddress}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-sf-medium text-gray-600 hover:text-gray-900 hover:bg-white/60 rounded-2xl transition-all group"
+                >
+                  <div className="p-2 bg-gray-100 rounded-full group-hover:bg-white transition-colors">
+                      {isCopied ? (
+                      <Check className="w-4 h-4 text-green-500" />
+                      ) : (
+                      <Copy className="w-4 h-4 text-gray-500 group-hover:text-gray-700" />
+                      )}
+                  </div>
+                  <span>{isCopied ? 'Copied!' : 'Copy Address'}</span>
+                </button>
+                
+                <div className="h-px bg-gray-100 mx-4 my-1" />
+  
+                <button
+                  onClick={handleDisconnect}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-sf-medium text-red-500 hover:text-red-600 hover:bg-red-50/50 rounded-2xl transition-all group"
+                >
+                  <div className="p-2 bg-red-50 rounded-full group-hover:bg-red-100 transition-colors">
+                      <LogOut className="w-4 h-4 text-red-500" />
+                  </div>
+                  <span>Disconnect</span>
+                </button>
+              </div>
+            </motion.div>
+        </AnimatePresence>,
+        document.body
       )}
     </div>
   );
