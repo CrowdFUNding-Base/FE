@@ -1,18 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/element/Button";
 import { cn } from "@/utils/helpers/cn";
 import Container from "@/components/layout/container";
 import Gradient from "@/components/element/Gradient";
 import LoginForm from "@/components/layout/LoginForm";
-
-interface SlideContent {
-    title: string;
-    subtitle: string;
-    image?: string | null;
-}
 
 const Login = () => {
     const router = useRouter();

@@ -8,6 +8,7 @@ import { Radio } from '@/components/element/Radio';
 import InputField from '@/components/element/InputField';
 import { CircularProgress } from '@/components/element/CircularProgress';
 import { CampaignCard } from '@/components/element/CampaignCard';
+import ProgressBar from '@/components/element/ProgressBar';
 import Gradient from '@/components/element/Gradient';
 import LoginForm from '@/components/layout/LoginForm';
 import {
@@ -181,6 +182,50 @@ export default function ComponentShowcase() {
                   Both Icons
                 </Button>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Progress Bar Section */}
+        <section className="mb-16">
+          <h2 className="text-2xl font-sf-semibold text-zinc-900 dark:text-white mb-6">
+            Progress Bar
+          </h2>
+          <div className="flex flex-col gap-8 max-w-2xl">
+            {/* Progress 25% */}
+            <div className="space-y-2">
+              <h3 className="text-lg font-sf-medium text-zinc-700 dark:text-zinc-300">25% Progress</h3>
+              <ProgressBar collected={2500000} total={10000000} />
+            </div>
+
+            {/* Progress 50% */}
+            <div className="space-y-2">
+              <h3 className="text-lg font-sf-medium text-zinc-700 dark:text-zinc-300">50% Progress</h3>
+              <ProgressBar collected={5000000} total={10000000} />
+            </div>
+
+            {/* Progress 75% */}
+            <div className="space-y-2">
+              <h3 className="text-lg font-sf-medium text-zinc-700 dark:text-zinc-300">75% Progress</h3>
+              <ProgressBar collected={7500000} total={10000000} />
+            </div>
+
+            {/* Progress 100% (Completed) */}
+            <div className="space-y-2">
+              <h3 className="text-lg font-sf-medium text-zinc-700 dark:text-zinc-300">100% Progress (Completed)</h3>
+              <ProgressBar collected={10000000} total={10000000} />
+            </div>
+
+            {/* Progress Over 100% */}
+            <div className="space-y-2">
+              <h3 className="text-lg font-sf-medium text-zinc-700 dark:text-zinc-300">Over 100%</h3>
+              <ProgressBar collected={12000000} total={10000000} />
+            </div>
+
+            {/* Small Amount */}
+            <div className="space-y-2">
+              <h3 className="text-lg font-sf-medium text-zinc-700 dark:text-zinc-300">Small Amount</h3>
+              <ProgressBar collected={150000} total={500000} />
             </div>
           </div>
         </section>

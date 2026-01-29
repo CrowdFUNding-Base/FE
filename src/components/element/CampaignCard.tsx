@@ -9,6 +9,8 @@ interface CampaignCardProps {
   title: string;
   description: string;
   progress: number;
+  needed?: number;
+  raised?: number;
   className?: string;
 }
 
@@ -18,6 +20,8 @@ export const CampaignCard = ({
   title,
   description,
   progress,
+  needed,
+  raised,
   className,
 }: CampaignCardProps) => {
   return (

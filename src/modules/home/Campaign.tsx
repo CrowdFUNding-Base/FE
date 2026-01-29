@@ -166,6 +166,8 @@ const Campaign = () => {
                                     title={campaign.title}
                                     description={campaign.description}
                                     progress={campaign.progress}
+                                    needed={campaign.needed}
+                                    raised={campaign.raised}
                                     className="min-w-[320px]"
                                 />
                             ))
