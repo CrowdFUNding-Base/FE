@@ -40,7 +40,7 @@ const Login = () => {
                         <div className={cn(
                             "flex-1 flex flex-col items-center gap-8 py-8 w-auto max-w-lg justify-center"
                         )}>
-                            <LoginForm variant="login" onSubmit={(data) => console.log('Login:', data)} />
+                            <LoginForm variant="login" />
                         </div>
                         
                         {/* Bottom Section */}
