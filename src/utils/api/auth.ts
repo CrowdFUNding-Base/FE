@@ -23,7 +23,7 @@ export interface AuthResponse {
  */
 export const loginWithWallet = async (data: WalletLoginData): Promise<AuthResponse> => {
   try {
-    const response = await axios.post(`${API_URL}/auth/wallet-login`, data, {
+    const response = await axios.post(`${API_URL}/wallet-login`, data, {
       withCredentials: true,
     });
     return response.data;
@@ -37,7 +37,7 @@ export const loginWithWallet = async (data: WalletLoginData): Promise<AuthRespon
  */
 export const logout = async (): Promise<void> => {
   try {
-    await axios.post(`${API_URL}/auth/logout`, {}, {
+    const response = await axios.post(`${API_URL}/logout`, {}, {
       withCredentials: true,
     });
   } catch (error) {
