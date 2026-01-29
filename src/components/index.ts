@@ -8,6 +8,7 @@ export { default as CharityCard, CoinDisplay } from './element/CharityCard';
 export { default as LeaderboardCard, LeaderboardListItem } from './element/LeaderboardCard';
 export { CampaignCard } from './element/CampaignCard';
 export { CircularProgress } from './element/CircularProgress';
+export { default as SyncConfirmModal } from './element/SyncConfirmModal';
 
 export { default as DropdownMenu } from './layout/DropdownContainer';
 export { default as Navbar } from './layout/navbar';

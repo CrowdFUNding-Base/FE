@@ -62,16 +62,7 @@ const Login = () => {
                                 Masuk Sebagai Guest
                             </Button>
                             
-                            {/* Sign In Link */}
-                            <p className="text-center text-xs font-sf-medium text-gray-600">
-                                Belum punya akun?{" "}
-                                <button
-                                    onClick={() => router.push("/register")}
-                                    className="text-gray-900 font-sf-medium hover:underline"
-                                >
-                                    Daftar disini
-                                </button>
-                            </p>
+                          
                         </div>
             </div>
             </Container>
