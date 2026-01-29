@@ -1,12 +1,17 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import Container from "@/components/layout/container";
 import { cn } from "@/utils/helpers/cn";
 import { Button } from "@/components/element/Button";
 import WalletButton from '@/components/element/WalletButton';
 import CharityCard, { CoinDisplay } from '@/components/element/CharityCard';
-import { Lightbulb } from "lucide-react";
+import { Plus } from "lucide-react";
 
 
 const Hero = () => {
+    const router = useRouter();
+
     return (
         <main className={cn("relative overflow-x-clip")}>
             <section className="relative overflow-hidden bg-[#FAFAFA]">
@@ -20,8 +25,14 @@ const Hero = () => {
                         <div className="font-sf-semibold text-lg text-black">
                             CrowdFUNding
                         </div>
-                        <Button variant="black" size="sm" leftIcon={<Lightbulb className="w-3.5 h-3.5" />} className="px-3.5">
-                            Tips
+                        <Button 
+                            variant="black" 
+                            size="sm" 
+                            leftIcon={<Plus className="w-3.5 h-3.5" />} 
+                            className="px-3.5"
+                            onClick={() => router.push("/campaign/create")}
+                        >
+                            Create
                         </Button>
                     </div>
                     <CharityCard 

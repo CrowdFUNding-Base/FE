@@ -11,6 +11,7 @@ import { CampaignCard } from '@/components/element/CampaignCard';
 import ProgressBar from '@/components/element/ProgressBar';
 import Gradient from '@/components/element/Gradient';
 import LoginForm from '@/components/layout/LoginForm';
+import CampaignForm from '@/components/layout/CampaignForm';
 import {
   DropdownRoot,
   DropdownButton,
@@ -58,6 +59,20 @@ export default function ComponentShowcase() {
               </h3>
               <LoginForm variant="register" onSubmit={(data) => console.log('Register:', data)} />
             </div>
+          </div>
+        </section>
+
+        {/* Campaign Form Section */}
+        <section className="mb-16">
+          <h2 className="text-2xl font-sf-semibold text-zinc-900 dark:text-white mb-6">
+            Campaign Form
+          </h2>
+          
+          <div className="space-y-4">
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              Form untuk membuat campaign baru dengan validasi Target Amount (hanya angka)
+            </p>
+            <CampaignForm onSubmit={(data) => console.log('Campaign Created:', data)} />
           </div>
         </section>
 
