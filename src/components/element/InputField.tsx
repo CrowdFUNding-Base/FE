@@ -7,7 +7,7 @@ type InputFieldProps = {
   helperText?: string;
   placeholder?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 
   variant?: InputVariant;
   type?: InputType;
@@ -17,6 +17,8 @@ type InputFieldProps = {
 
   error?: boolean;
   disabled?: boolean;
+  multiline?: boolean;
+  rows?: number;
   className?: string;
 };
 
@@ -47,6 +49,8 @@ export default function InputField({
   rightIcon,
   error = false,
   disabled = false,
+  multiline = false,
+  rows = 3,
   className = '',
 }: InputFieldProps) {
 
@@ -57,7 +61,7 @@ export default function InputField({
     return '#666666';
   })();
   return (
-    <div className={`flex flex-col gap-1.5 w-[256px] ${className}`}>
+    <div className={`flex flex-col gap-1.5 w-full ${className}`}>
       {/* Label */}
       <label className="
         text-base
@@ -74,7 +78,7 @@ export default function InputField({
         className={`
           group
           flex items-center gap-2
-          h-11
+          ${multiline ? 'min-h-[44px]' : 'h-11'}
           px-3.5 py-3
           rounded-[14px]
           transition-all duration-200 ease-out
@@ -109,22 +113,42 @@ export default function InputField({
             {leftIcon}
           </span>
         )}
-        <input
-          type={type}
-          value={value}
-          disabled={disabled}
-          onChange={onChange}
-          placeholder={placeholder}
-          className="
-            w-full bg-transparent
-            outline-none
-            text-sm
-            font-sf-medium
-            text-[#262626]
-            placeholder:text-neutral-400
-            disabled:cursor-not-allowed
-          "
-        />
+        {multiline ? (
+          <textarea
+            value={value}
+            disabled={disabled}
+            onChange={onChange}
+            placeholder={placeholder}
+            rows={rows}
+            className="
+              w-full bg-transparent
+              outline-none
+              text-sm
+              font-sf-medium
+              text-[#262626]
+              placeholder:text-neutral-400
+              disabled:cursor-not-allowed
+              resize-none
+            "
+          />
+        ) : (
+          <input
+            type={type}
+            value={value}
+            disabled={disabled}
+            onChange={onChange}
+            placeholder={placeholder}
+            className="
+              w-full bg-transparent
+              outline-none
+              text-sm
+              font-sf-medium
+              text-[#262626]
+              placeholder:text-neutral-400
+              disabled:cursor-not-allowed
+            "
+          />
+        )}
         {rightIcon && (
           <span
             className="w-6 h-6 flex items-center justify-center"

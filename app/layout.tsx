@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${SFCompactRegular.variable}  ${SFCompactMedium.variable} ${SFCompactSemibold.variable} ${SFCompactBold.variable} antialiased`}
+        className={`${SFCompactRegular.variable}  ${SFCompactMedium.variable} ${SFCompactSemibold.variable} ${SFCompactBold.variable} antialiased scrollbar-hide overflow-y-auto`}
       >
         <Web3Provider>
           {children}

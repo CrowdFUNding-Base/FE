@@ -81,7 +81,7 @@ const Campaign = () => {
         }
     };
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setSearchQuery(e.target.value);
     };
 
