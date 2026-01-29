@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useAccount } from "wagmi";
 import { Button } from "@/components/element/Button";
 import { cn } from "@/utils/helpers/cn";
 import { Bookmark } from "lucide-react";
@@ -29,8 +30,12 @@ interface CampaignPageProps {
 
 const CampaignPage = ({ campaignId }: CampaignPageProps) => {
     const router = useRouter();
+    const { isConnected } = useAccount();
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [campaign, setCampaign] = useState<Campaign | null>(null);
+
+    // Mock checks: Only Campaign 1 is owned by the current user
+    const isOwner = isConnected && campaignId === "1";
 
     useEffect(() => {
         console.log('Looking for campaign ID:', campaignId);
@@ -120,15 +125,26 @@ const CampaignPage = ({ campaignId }: CampaignPageProps) => {
                                     'backdrop-blur-xl'
                                 )}
                             >
-                                <div className="flex items-center justify-around gap-6 h-full">
-                                    <Button
-                                        variant="primary"
-                                        size="md"
-                                        onClick= {() => router.push("/campaign/donate")}
-                                        className="w-full max-w-md"
-                                    >
-                                        Donate Now
-                                    </Button>
+                                <div className="flex flex-col gap-3 w-full items-center">
+                                    {isOwner ? (
+                                        <Button
+                                            variant="primary"
+                                            size="md"
+                                            onClick={() => router.push(`/campaign/${campaignId}/withdraw`)}
+                                            className="w-full max-w-md bg-red-600 hover:bg-red-700" // Distinct color for owner action
+                                        >
+                                            Withdraw Funds
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant="primary"
+                                            size="md"
+                                            onClick={() => router.push(`/campaign/${campaignId}/donate`)}
+                                            className="w-full max-w-md"
+                                        >
+                                            Donate Now
+                                        </Button>
+                                    )}
                                 </div>
                             </div>
                         </div>
