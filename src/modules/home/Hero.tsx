@@ -1,16 +1,25 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import Container from "@/components/layout/container";
 import { cn } from "@/utils/helpers/cn";
 import { Button } from "@/components/element/Button";
 import WalletButton from '@/components/element/WalletButton';
-import CharityCard, { CoinDisplay } from '@/components/element/CharityCard';
+import CharityCard from '@/components/element/CharityCard';
 import { Plus } from "lucide-react";
+import { getCharityPoints, getStreak } from "@/utils/localStorage";
 
 
 const Hero = () => {
     const router = useRouter();
+    const [points, setPoints] = useState(0);
+    const [streak, setStreak] = useState(0);
+
+    useEffect(() => {
+        setPoints(getCharityPoints());
+        setStreak(getStreak());
+    }, []);
 
     return (
         <main className={cn("relative overflow-x-clip")}>
@@ -36,8 +45,8 @@ const Hero = () => {
                         </Button>
                     </div>
                     <CharityCard 
-                        collected={4} 
-                        streak={10} 
+                        collected={points} 
+                        streak={streak} 
                         totalDays={100}
                         onArrowClick={() => alert('Arrow clicked!')}
                         className="z-10"
