@@ -9,7 +9,7 @@ import Container from "@/components/layout/container";
 import Gradient from "@/components/element/Gradient";
 import CampaignForm, { CampaignFormData } from "@/components/layout/CampaignForm";
 import { useCreateCampaign } from "@/hooks/useCreateCampaign";
-import { CheckCircle, XCircle, Wallet } from "lucide-react";
+import { CheckCircle, XCircle, Wallet, Loader2 } from "lucide-react";
 
 const CreateCampaign = () => {
     const router = useRouter();
@@ -53,6 +53,43 @@ const CreateCampaign = () => {
         }
     };
 
+    // Show confirming state (transaction submitted, waiting for blockchain)
+    if (status === 'confirming' && txHash) {
+        return (
+            <main className={cn("relative overflow-x-clip")}>
+                <section className="relative overflow-hidden bg-[#FAFAFA]">
+                    <Container className="relative flex flex-col items-center justify-center gap-6 py-0 min-h-screen">
+                        <Gradient className={cn("-translate-y-1/2 rounded-b-[60px]")} />
+                        <div className="relative flex flex-col items-center justify-center gap-6 text-center">
+                            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
+                                <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
+                            </div>
+                            <h1 className="text-2xl font-sf-bold text-black">Confirming Transaction</h1>
+                            <p className="text-gray-600 font-sf-regular max-w-xs">
+                                Waiting for blockchain confirmation. This may take 10-30 seconds on testnet.
+                            </p>
+                            <a 
+                                href={`https://sepolia.basescan.org/tx/${txHash}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-cyan-600 underline text-sm font-sf-medium"
+                            >
+                                View on BaseScan →
+                            </a>
+                            <Button
+                                variant="black"
+                                size="sm"
+                                onClick={() => router.push('/home')}
+                            >
+                                Continue to Home
+                            </Button>
+                        </div>
+                    </Container>
+                </section>
+            </main>
+        );
+    }
+
     // Show success state
     if (status === 'success') {
         return (
@@ -88,6 +125,36 @@ const CreateCampaign = () => {
         );
     }
 
+// Helper function to get user-friendly error message
+const getErrorMessage = (error: Error | null): string => {
+    if (!error) return 'Something went wrong. Please try again.';
+    
+    const message = error.message.toLowerCase();
+    
+    // User rejected transaction
+    if (message.includes('user rejected') || message.includes('user denied')) {
+        return 'Transaction was cancelled.';
+    }
+    
+    // Insufficient funds
+    if (message.includes('insufficient funds') || message.includes('insufficient balance')) {
+        return 'Insufficient funds in your wallet.';
+    }
+    
+    // Network issues
+    if (message.includes('network') || message.includes('connection')) {
+        return 'Network error. Please check your connection.';
+    }
+    
+    // Gas estimation failed
+    if (message.includes('gas')) {
+        return 'Transaction failed. Please try again.';
+    }
+    
+    // Default: show short message
+    return 'Transaction failed. Please try again.';
+};
+
     // Show error state
     if (status === 'error') {
         return (
@@ -101,7 +168,7 @@ const CreateCampaign = () => {
                             </div>
                             <h1 className="text-2xl font-sf-bold text-black">Transaction Failed</h1>
                             <p className="text-gray-600 font-sf-regular">
-                                {error?.message || 'Something went wrong. Please try again.'}
+                                {getErrorMessage(error)}
                             </p>
                             <Button
                                 variant="primary"

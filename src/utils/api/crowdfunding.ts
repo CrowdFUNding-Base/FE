@@ -13,7 +13,6 @@ export interface Campaign {
   creationTime: number;
   description?: string;
   lastSyncedAt?: string;
-  description?: string;
 }
 
 export interface CampaignDetail {
