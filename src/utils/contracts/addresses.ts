@@ -2,12 +2,12 @@
 export const CONTRACTS = {
   baseSepolia: {
     // Tokens
-    IDRX: '0xAC90f99347766F9b3b425Ca54248150e2C9D1Bde' as const,
-    USDC: '0xC85840d4754aC06cEE7138eC0a664317921B6B5f' as const,
+    IDRX: '0x387551ac55Bb6949d44715D07880f8c6260934B6' as const,
+    USDC: '0x1b929eB40670aA4e0D757d45cA9aea2311a25a97' as const,
     // Core contracts
-    CAMPAIGN: '0x669419298f071c321EF9B9cCA44be58E380A5fE3' as const,
-    BADGE: '0x27EA9B34D708ff7646F92Dab287DfD43EbBA0d19' as const,
-    MOCKSWAP: '0x3d03aa45D45d7ed60687927D7fD6740e4D445278' as const,
+    CAMPAIGN: '0x44e87aa98d721Dbcf368690bF5aAb1F3dD944dA9' as const,
+    BADGE: '0xaE32Df9Fb677aE68C5A1F956761a42e269Ebdc99' as const,
+    MOCKSWAP: '0x554366984fD2f5D82c753F91357d80c29F887F17' as const,
   },
   // Base Mainnet (placeholder for future)
   base: {
