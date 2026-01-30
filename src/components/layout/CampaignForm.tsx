@@ -4,13 +4,16 @@ import { useState } from "react";
 import InputField from "@/components/element/InputField";
 import { Button } from "@/components/element/Button";
 import { cn } from "@/utils/helpers/cn";
+import { Loader2 } from "lucide-react";
 
 interface CampaignFormProps {
     onSubmit?: (data: CampaignFormData) => void;
     className?: string;
+    isLoading?: boolean;
+    loadingText?: string;
 }
 
-interface CampaignFormData {
+export interface CampaignFormData {
     title: string;
     creator: string;
     description: string;
@@ -18,7 +21,12 @@ interface CampaignFormData {
     endDate: string;
 }
 
-export default function CampaignForm({ onSubmit, className }: CampaignFormProps) {
+export default function CampaignForm({ 
+    onSubmit, 
+    className, 
+    isLoading = false,
+    loadingText = "Creating..."
+}: CampaignFormProps) {
     const [formData, setFormData] = useState<CampaignFormData>({
         title: "",
         creator: "",
@@ -43,8 +51,17 @@ export default function CampaignForm({ onSubmit, className }: CampaignFormProps)
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (!isFormValid || isLoading) return;
         onSubmit?.(formData);
     };
+
+    // Form validation
+    const isFormValid = 
+        formData.title.trim() !== "" &&
+        formData.creator.trim() !== "" &&
+        formData.targetAmount.trim() !== "" &&
+        !targetAmountError &&
+        Number(formData.targetAmount) > 0;
 
     return (
         <form
@@ -63,6 +80,7 @@ export default function CampaignForm({ onSubmit, className }: CampaignFormProps)
                     value={formData.title}
                     onChange={handleChange("title")}
                     variant="default"
+                    disabled={isLoading}
                 />
             </div>
 
@@ -75,6 +93,7 @@ export default function CampaignForm({ onSubmit, className }: CampaignFormProps)
                     value={formData.creator}
                     onChange={handleChange("creator")}
                     variant="default"
+                    disabled={isLoading}
                 />
             </div>
 
@@ -88,13 +107,14 @@ export default function CampaignForm({ onSubmit, className }: CampaignFormProps)
                     variant="default"
                     multiline={true}
                     rows={4}
+                    disabled={isLoading}
                 />
             </div>
 
             {/* Target Amount */}
             <div className="flex justify-center items-center self-stretch">
                 <InputField
-                    label="Target Amount"
+                    label="Target Amount (IDRX)"
                     placeholder="Enter target amount"
                     type="text"
                     value={formData.targetAmount}
@@ -102,24 +122,27 @@ export default function CampaignForm({ onSubmit, className }: CampaignFormProps)
                     variant="default"
                     error={targetAmountError}
                     helperText={targetAmountError ? "Only use number" : ""}
+                    disabled={isLoading}
                 />
             </div>
 
             {/* End Date */}
             <div className="flex flex-col gap-2 w-full">
                 <label className="text-sm font-sf-medium text-zinc-700">
-                    End Date
+                    End Date (Optional)
                 </label>
                 <input
                     type="date"
                     value={formData.endDate}
                     onChange={handleChange("endDate")}
+                    disabled={isLoading}
                     className={cn(
                         "w-full px-4 py-3 rounded-lg",
                         "border border-[#A6A6A6]",
                         "font-sf-regular text-base text-zinc-900",
                         "focus:outline-none focus:ring-2 focus:ring-blue-500",
-                        "transition-all"
+                        "transition-all",
+                        "disabled:opacity-50 disabled:cursor-not-allowed"
                     )}
                 />
             </div>
@@ -131,11 +154,19 @@ export default function CampaignForm({ onSubmit, className }: CampaignFormProps)
                     size="md"
                     type="submit"
                     className="w-full"
-                    disabled={targetAmountError}
+                    disabled={!isFormValid || isLoading}
                 >
-                    Create Campaign
+                    {isLoading ? (
+                        <span className="flex items-center gap-2">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            {loadingText}
+                        </span>
+                    ) : (
+                        "Create Campaign"
+                    )}
                 </Button>
             </div>
         </form>
     );
 }
+

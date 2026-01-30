@@ -6,8 +6,8 @@ import Container from "@/components/layout/container";
 import { Button } from "@/components";
 import { CampaignCard } from "@/components";
 import InputField from "@/components/element/InputField";
-import { Search, ArrowDown, MessageCircleWarning, Siren, BookOpen, HeartPulse, X } from "lucide-react";
-import campaignsData from "@/data/campaigns.json";
+import { Search, ArrowDown, MessageCircleWarning, Siren, BookOpen, HeartPulse, X, Loader2 } from "lucide-react";
+import { useCampaignsForUI } from "@/hooks/useCrowdfunding";
 
 const Campaign = () => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -18,21 +18,23 @@ const Campaign = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
+    // Fetch campaigns from backend API
+    const { campaigns, isLoading, error } = useCampaignsForUI({ refetchInterval: 5000 });
+
     // Filter campaigns based on search query
     const filteredCampaigns = useMemo(() => {
-        if (!searchQuery.trim()) return campaignsData;
+        if (!searchQuery.trim()) return campaigns;
         
         const query = searchQuery.toLowerCase();
-        return campaignsData.filter((campaign: any) => {
+        return campaigns.filter((campaign) => {
             return (
                 campaign.id.toLowerCase().includes(query) ||
                 campaign.title.toLowerCase().includes(query) ||
                 campaign.description.toLowerCase().includes(query) ||
-                campaign.creator.toLowerCase().includes(query) ||
-                campaign.tags.some((tag: string) => tag.toLowerCase().includes(query))
+                campaign.creatorName.toLowerCase().includes(query)
             );
         });
-    }, [searchQuery]);
+    }, [searchQuery, campaigns]);
 
     const handleMouseDown = (e: React.MouseEvent) => {
         if (!scrollContainerRef.current) return;
@@ -157,8 +159,26 @@ const Campaign = () => {
                     )}
                     
                     <div className="flex flex-col gap-4 w-full py-0 pb-24">
-                        {filteredCampaigns.length > 0 ? (
-                            filteredCampaigns.map((campaign: any) => (
+                        {isLoading ? (
+                            <div className="flex flex-col items-center justify-center py-12 text-center">
+                                <Loader2 className="w-12 h-12 text-cyan-500 mb-3 animate-spin" />
+                                <p className="text-lg font-sf-semibold text-gray-600 mb-1">Memuat Campaign...</p>
+                                <p className="text-sm font-sf-regular text-gray-400">
+                                    Mengambil data dari blockchain
+                                </p>
+                            </div>
+                        ) : error ? (
+                            <div className="flex flex-col items-center justify-center py-12 text-center">
+                                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-3">
+                                    <X className="w-6 h-6 text-red-500" />
+                                </div>
+                                <p className="text-lg font-sf-semibold text-gray-600 mb-1">Gagal Memuat Data</p>
+                                <p className="text-sm font-sf-regular text-gray-400">
+                                    {error.message || 'Terjadi kesalahan saat mengambil data'}
+                                </p>
+                            </div>
+                        ) : filteredCampaigns.length > 0 ? (
+                            filteredCampaigns.map((campaign) => (
                                 <CampaignCard
                                     key={campaign.id}
                                     id={campaign.id}
@@ -174,9 +194,14 @@ const Campaign = () => {
                         ) : (
                             <div className="flex flex-col items-center justify-center py-12 text-center">
                                 <Search className="w-12 h-12 text-gray-300 mb-3" />
-                                <p className="text-lg font-sf-semibold text-gray-600 mb-1">Tidak ada hasil</p>
+                                <p className="text-lg font-sf-semibold text-gray-600 mb-1">
+                                    {searchQuery ? 'Tidak ada hasil' : 'Belum ada campaign'}
+                                </p>
                                 <p className="text-sm font-sf-regular text-gray-400">
-                                    Coba kata kunci lain untuk pencarian Anda
+                                    {searchQuery 
+                                        ? 'Coba kata kunci lain untuk pencarian Anda'
+                                        : 'Jadilah yang pertama membuat campaign!'
+                                    }
                                 </p>
                             </div>
                         )}

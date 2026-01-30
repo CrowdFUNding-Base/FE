@@ -2,217 +2,303 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAccount } from 'wagmi';
+import { useAccount, useReadContract } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { ArrowLeft, Wallet, QrCode, CheckCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, Wallet, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import Gradient from '@/components/element/Gradient';
 import Container from '@/components/layout/container';
 import { cn } from '@/utils/helpers/cn';
-import { saveDonation, getCharityPoints } from '@/utils/localStorage';
 import { Button } from '@/components/element/Button';
+import { useDonate } from '@/hooks/useDonate';
+import { useCampaign, formatIDRXCurrency, formatIDR } from '@/hooks/useCrowdfunding';
+import { ERC20_ABI } from '@/utils/abi/erc20';
+import { CONTRACTS, TOKEN_DECIMALS } from '@/utils/contracts/addresses';
+import { formatUnits } from 'viem';
 
 interface DonationPageProps {
   campaignId: string;
 }
 
+type Currency = 'IDRX' | 'USDC';
+
 export default function DonationPage({ campaignId }: DonationPageProps) {
   const router = useRouter();
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
+  
   const [amount, setAmount] = useState<number | ''>('');
-  const [isQrisGenerated, setIsQrisGenerated] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [currency, setCurrency] = useState<Currency>('IDRX');
 
-  // Mock checking if user is the owner (for demo purposes, assumes specific address)
-  // Or just mock it if connected for easy testing
-  const isOwner = isConnected; // Allow any connected user to withdraw for demo 
+  // Fetch campaign data
+  const { data: campaignData, isLoading: campaignLoading } = useCampaign(Number(campaignId));
+  const campaign = campaignData?.campaign;
 
-  const handleGenerateQris = () => {
-    if (!amount || amount < 1000) {
-      alert('Minimum donation is Rp 1.000');
+  // Selected Token Params
+  const tokenAddress = CONTRACTS.baseSepolia[currency];
+  const tokenDecimals = TOKEN_DECIMALS[currency];
+
+  // Donate hook (Dynamic based on selected currency)
+  const { donate, status, txHash, error, reset } = useDonate(tokenAddress, tokenDecimals);
+
+  // Get Wallet Balance for selected token
+  const { data: balanceData } = useReadContract({
+    address: tokenAddress,
+    abi: ERC20_ABI,
+    functionName: 'balanceOf',
+    args: address ? [address] : undefined,
+  });
+
+  const formattedBalance = balanceData 
+    ? Number(formatUnits(balanceData as bigint, tokenDecimals))
+    : 0;
+
+  const handleDonate = async () => {
+    if (!amount || amount <= 0) {
+      alert('Please enter a valid amount');
       return;
     }
-    setIsProcessing(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsQrisGenerated(true);
-      setIsProcessing(false);
-    }, 1500);
+    if (amount > formattedBalance) {
+      alert(`Insufficient ${currency} balance`);
+      return;
+    }
+
+    await donate(Number(campaignId), amount);
   };
 
-  const handleSimulatePayment = () => {
-    setIsProcessing(true);
-    setTimeout(() => {
-      saveDonation(Number(amount), campaignId);
-      setPaymentSuccess(true);
-      setIsProcessing(false);
-    }, 2000);
+  // Helper to format display amount based on currency
+  const formatDisplayAmount = (val: number) => {
+    if (currency === 'IDRX') return formatIDR(val);
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
   };
 
-  const handleWithdraw = () => {
-    // Navigate to Withdraw page
-    router.push(`/campaign/${campaignId}/withdraw`);
-  };
-
-  if (paymentSuccess) {
+  // Success state
+  if (status === 'success') {
     return (
       <div className="min-h-screen w-full bg-white flex justify-center">
         <div className="w-full max-w-lg bg-[#FAFAFA] relative h-screen overflow-hidden flex flex-col shadow-2xl">
-            <Gradient />
-            <Container className="relative z-10 h-full flex flex-col items-center justify-center p-6">
-                <div className="bg-white/80 backdrop-blur-md rounded-3xl p-8 shadow-xl flex flex-col items-center gap-6 max-w-sm w-full animate-in fade-in zoom-in duration-500 border border-white/50">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-                    <CheckCircle className="w-10 h-10 text-green-600" />
-                </div>
-                <div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Thank You!</h2>
-                    <p className="text-gray-600">Your donation has been received. You earned +1 Charity Point!</p>
-                </div>
-                <Button
-                    onClick={() => router.push(`/profile`)}
-                    variant="primary"
-                    size="lg"
-                    className="w-full rounded-xl shadow-lg"
+          <Gradient />
+          <Container className="relative z-10 h-full flex flex-col items-center justify-center p-6">
+            <div className="bg-white/80 backdrop-blur-md rounded-3xl p-8 shadow-xl flex flex-col items-center gap-6 max-w-sm w-full animate-in fade-in zoom-in duration-500 border border-white/50">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                <CheckCircle className="w-10 h-10 text-green-600" />
+              </div>
+              <div className="text-center">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Thank You!</h2>
+               <p className="text-gray-600">Your donation of {formatDisplayAmount(Number(amount))} has been received!</p>
+              </div>
+              {txHash && (
+                <a 
+                  href={`https://sepolia.basescan.org/tx/${txHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-cyan-600 underline text-sm"
                 >
-                    Check My Profile
-                </Button>
-                </div>
-            </Container>
+                  View on BaseScan →
+                </a>
+              )}
+              <Button
+                onClick={() => router.push(`/campaign/${campaignId}`)}
+                variant="primary"
+                size="lg"
+                className="w-full rounded-xl shadow-lg"
+              >
+                Back to Campaign
+              </Button>
+            </div>
+          </Container>
         </div>
       </div>
     );
   }
+
+  // Error state
+  if (status === 'error') {
+    return (
+      <div className="min-h-screen w-full bg-white flex justify-center">
+        <div className="w-full max-w-lg bg-[#FAFAFA] relative h-screen overflow-hidden flex flex-col shadow-2xl">
+          <Gradient />
+          <Container className="relative z-10 h-full flex flex-col items-center justify-center p-6">
+            <div className="bg-white/80 backdrop-blur-md rounded-3xl p-8 shadow-xl flex flex-col items-center gap-6 max-w-sm w-full animate-in fade-in zoom-in duration-500 border border-white/50">
+              <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center">
+                <AlertCircle className="w-10 h-10 text-red-600" />
+              </div>
+              <div className="text-center">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Transaction Failed</h2>
+                <p className="text-gray-600 text-sm">{error?.message || 'Something went wrong'}</p>
+              </div>
+              <Button
+                onClick={reset}
+                variant="primary"
+                size="lg"
+                className="w-full rounded-xl shadow-lg"
+              >
+                Try Again
+              </Button>
+            </div>
+          </Container>
+        </div>
+      </div>
+    );
+  }
+
+  const isProcessing = status === 'approving' || status === 'donating' || status === 'confirming';
 
   return (
     <div className="min-h-screen w-full bg-white flex justify-center">
       <div className="w-full max-w-lg bg-[#FAFAFA] relative h-screen overflow-hidden flex flex-col shadow-2xl">
         <Gradient />
         <Container className="relative z-10 h-full flex flex-col px-4 pt-6">
-        <div className="flex-1 overflow-y-auto pb-10 scrollbar-hide">
+          <div className="flex-1 overflow-y-auto pb-10 scrollbar-hide">
             <Button 
-            onClick={() => router.back()}
-            className="w-10 h-10 p-0 rounded-full bg-white/50 backdrop-blur-md hover:bg-white/80 transition shadow-sm mb-4 self-start"
-            variant="secondary"
+              onClick={() => router.back()}
+              className="w-10 h-10 p-0 rounded-full bg-white/50 backdrop-blur-md hover:bg-white/80 transition shadow-sm mb-4 self-start"
+              variant="secondary"
+              disabled={isProcessing}
             >
-            <ArrowLeft className="w-6 h-6 text-gray-800" />
+              <ArrowLeft className="w-6 h-6 text-gray-800" />
             </Button>
+
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Donate to Campaign</h1>
+            {campaign && (
+              <p className="text-gray-600 mb-6">{campaign.name}</p>
+            )}
             
-            {/* Helper / Wallet Connect */}
+            {/* Wallet Connect */}
             {!isConnected ? (
-            <div className="bg-white/60 backdrop-blur-md rounded-2xl p-4 shadow-sm flex items-center justify-between border border-white/50">
+              <div className="bg-white/60 backdrop-blur-md rounded-2xl p-4 shadow-sm flex items-center justify-between border border-white/50">
                 <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
+                  <div className="p-2 bg-blue-100 rounded-lg">
                     <Wallet className="w-6 h-6 text-blue-600" />
-                </div>
-                <span className="text-sm font-medium text-gray-700">Connect to track donations</span>
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">Connect wallet to donate</span>
                 </div>
                 <Button 
-                onClick={openConnectModal}
-                variant="wallet"
-                size="sm"
-                className='bg-blue-600 hover:bg-blue-700'
+                  onClick={openConnectModal}
+                  variant="wallet"
+                  size="sm"
+                  className='bg-blue-600 hover:bg-blue-700'
                 >
-                Connect
+                  Connect
                 </Button>
-            </div>
+              </div>
             ) : (
-            <div className="bg-white/60 backdrop-blur-md rounded-2xl p-4 shadow-sm flex items-center justify-between border border-white/50">
-                <span className="text-sm font-medium text-gray-700 truncate max-w-[200px]">
-                {address || 'Connected User'}
-                </span>
-                {isOwner && (
-                <Button 
-                    onClick={handleWithdraw}
-                    variant="primary"
-                    size="sm"
-                    className="bg-green-600 hover:bg-green-700 rounded-lg"
-                >
-                    Withdraw
-                </Button>
-                )}
-            </div>
+              <div className="bg-white/60 backdrop-blur-md rounded-2xl p-4 shadow-sm flex flex-col gap-2 border border-white/50 mb-6">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-500">Your {currency} Balance</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    {currency === 'IDRX' 
+                      ? formatIDRXCurrency(formattedBalance * 100) // formatIDRX expects cents
+                      : `${formattedBalance.toLocaleString()} USDC`
+                    }
+                  </span>
+                </div>
+              </div>
             )}
 
             {/* Donation Form */}
-            <div className="bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl flex flex-col gap-6 border border-white/50 mt-6">
-            {!isQrisGenerated ? (
-                <>
-                <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Donation Amount (IDR)</label>
-                    <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">Rp</span>
-                    <input 
-                        type="number" 
-                        value={amount}
-                        onChange={(e) => setAmount(Number(e.target.value))}
-                        placeholder="50000"
-                        className="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-xl text-lg font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                    />
-                    </div>
-                    <div className="flex gap-2 mt-3 overflow-x-auto pb-2 scrollbar-hide">
-                    {[10000, 25000, 50000, 100000].map((val) => (
-                        <Button
-                        key={val}
-                        onClick={() => setAmount(val)}
-                        variant={amount === val ? 'primary' : 'rounded'}
-                        size="rounded"
-                        className={cn(
-                            "whitespace-nowrap",
-                            amount !== val && "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                        )}
-                        >
-                        {val.toLocaleString('id-ID')}
-                        </Button>
-                    ))}
-                    </div>
+            {isConnected && (
+              <div className="bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl flex flex-col gap-6 border border-white/50 mt-4">
+                
+                {/* Currency Tabs */}
+                <div className="flex p-1 bg-gray-100/50 rounded-xl">
+                  {['IDRX', 'USDC'].map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => {
+                        setCurrency(c as Currency);
+                        setAmount('');
+                      }}
+                      disabled={isProcessing}
+                      className={cn(
+                        "flex-1 py-2 rounded-lg text-sm font-semibold transition-all duration-200",
+                        currency === c 
+                          ? "bg-white text-blue-600 shadow-sm" 
+                          : "text-gray-500 hover:text-gray-700"
+                      )}
+                    >
+                      {c}
+                    </button>
+                  ))}
                 </div>
 
-                <Button
-                    onClick={handleGenerateQris}
-                    disabled={isProcessing}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Donation Amount ({currency})</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">
+                      {currency === 'IDRX' ? 'Rp' : '$'}
+                    </span>
+                    <input 
+                      type="number" 
+                      value={amount}
+                      onChange={(e) => setAmount(Number(e.target.value))}
+                      placeholder={currency === 'IDRX' ? "10000" : "10"}
+                      disabled={isProcessing}
+                      className="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-xl text-lg font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition disabled:opacity-50"
+                    />
+                  </div>
+                  
+                  {currency === 'IDRX' && (
+                    <div className="flex gap-2 mt-3 overflow-x-auto pb-2 scrollbar-hide">
+                      {[1000, 5000, 10000, 50000].map((val) => (
+                        <Button
+                          key={val}
+                          onClick={() => setAmount(val)}
+                          variant={amount === val ? 'primary' : 'rounded'}
+                          size="rounded"
+                          disabled={isProcessing}
+                          className={cn(
+                            "whitespace-nowrap",
+                            amount !== val && "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          )}
+                        >
+                          {val.toLocaleString('id-ID')}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
+
+                  {currency === 'USDC' && (
+                     <div className="flex gap-2 mt-3 overflow-x-auto pb-2 scrollbar-hide">
+                     {[5, 10, 25, 50].map((val) => (
+                       <Button
+                         key={val}
+                         onClick={() => setAmount(val)}
+                         variant={amount === val ? 'primary' : 'rounded'}
+                         size="rounded"
+                         disabled={isProcessing}
+                         className={cn(
+                           "whitespace-nowrap",
+                           amount !== val && "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                         )}
+                       >
+                         ${val}
+                       </Button>
+                     ))}
+                   </div>
+                  )}
+                </div>
+
+                  <Button
+                    onClick={handleDonate}
+                    disabled={isProcessing || !amount || amount <= 0}
                     variant="primary"
                     size="lg"
                     className="w-full rounded-xl shadow-lg"
-                    leftIcon={isProcessing ? <Loader2 className="animate-spin" /> : <QrCode className="w-5 h-5" />}
-                >
-                    Generate QRIS
-                </Button>
-                </>
-            ) : (
-                <div className="flex flex-col items-center animate-in fade-in duration-500">
-                <div className="bg-white p-4 rounded-xl border-2 border-dashed border-gray-300 mb-4 w-full aspect-square flex items-center justify-center bg-gray-50">
-                    <div className="text-center">
-                        <QrCode className="w-24 h-24 text-gray-800 mx-auto mb-2 opacity-20" />
-                        <p className="text-sm text-gray-500 font-mono">MOCK QRIS - {Number(amount).toLocaleString('id-ID')}</p>
-                    </div>
-                </div>
-                
-                <p className="text-sm text-center text-gray-500 mb-6">
-                    Scan this QR code with your payment app to mock the donation.
-                </p>
-
-                <Button
-                    onClick={handleSimulatePayment}
-                    disabled={isProcessing}
-                    variant="primary"
-                    size="lg"
-                    className="w-full bg-green-600 hover:bg-green-700 rounded-xl shadow-lg"
-                    leftIcon={isProcessing && <Loader2 className="animate-spin" />}
-                >
-                    {isProcessing ? 'Processing...' : 'Simulate Payment Success'}
-                </Button>
-                
-                <button
-                    onClick={() => setIsQrisGenerated(false)}
-                    className="mt-4 text-sm text-gray-500 hover:text-gray-800 underline"
-                >
-                    Cancel
-                </button>
-                </div>
+                  >
+                    {isProcessing ? (
+                      <span className="flex items-center gap-2">
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        {status === 'approving' && `Approving ${currency}...`}
+                        {status === 'donating' && 'Confirm in wallet...'}
+                        {status === 'confirming' && 'Confirming...'}
+                      </span>
+                    ) : (
+                      'Donate Now'
+                    )}
+                  </Button>
+              </div>
             )}
-            </div>
-            </div>
+          </div>
         </Container>
       </div>
     </div>
