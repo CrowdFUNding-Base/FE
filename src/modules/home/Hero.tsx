@@ -48,7 +48,7 @@ const Hero = () => {
                         collected={points} 
                         streak={streak} 
                         totalDays={100}
-                        onArrowClick={() => alert('Arrow clicked!')}
+                        onArrowClick={() => router.push('/profile/achievements')}
                         className="z-10"
                     />
                     <WalletButton className="z-10" />

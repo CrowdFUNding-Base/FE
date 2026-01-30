@@ -22,22 +22,22 @@ const Onboarding = () => {
     const slides: SlideContent[] = [
         {
             title: "CrowdFUNding",
-            subtitle: "Aplikasi untuk berbuat baik dengan mudah, aman, dan menyenangkan",
+            subtitle: "A platform that makes doing good easy, secure, and enjoyable",
             image: null,
         },
         {
-            title: "Donasi",
-            subtitle: "Untuk membersihkan harta dan berbagi manfaat bagi sesama.",
+            title: "Donation",
+            subtitle: "A meaningful way to purify wealth and spread goodness to others through positive impact.",
             image: "/assets/images/onboarding-2.png",
         },
         {
-            title: "Aman",
-            subtitle: "Teknologi Blockchain membuat anda lebih aman dengan fitur Wallet",
+            title: "Safe",
+            subtitle: "Blockchain technology enhances security through integrated wallet features",
             image: "/assets/images/onboarding-3.png",
         },
         {
-            title: "Menyenangkan",
-            subtitle: "Aplikasi donasi menggunakan fitur-fitur gamifikasi yang menarik",
+            title: "Fun & Engaging",
+            subtitle: "A donation platform enhanced with interactive gamification features",
             image: "/assets/images/onboarding-4.png",
         },
     ];
@@ -132,17 +132,17 @@ const Onboarding = () => {
                                 onClick={handleNext}
                                 className="w-full"
                             >
-                                Lanjut
+                                Next
                             </Button>
                             
                             {/* Sign In Link */}
                             <p className="text-center text-xs font-sf-medium text-gray-600">
-                                Sudah punya akun?{" "}
+                                Already have an account?{" "}
                                 <button
                                     onClick={() => router.push("/login")}
                                     className="text-gray-900 font-sf-medium hover:underline"
                                 >
-                                    Masuk disini
+                                    Sign in here
                                 </button>
                             </p>
                         </div>
