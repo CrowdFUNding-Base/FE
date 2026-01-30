@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { saveDonation } from '@/utils/localStorage';
 import { useAccount, useReadContract } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { ArrowLeft, Wallet, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
@@ -51,6 +52,21 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
   const formattedBalance = balanceData 
     ? Number(formatUnits(balanceData as bigint, tokenDecimals))
     : 0;
+
+  // Track if we've saved the donation for this transaction
+  const hasSavedDonation = useRef(false);
+
+  // Save donation to localStorage when status becomes success
+  useEffect(() => {
+    if (status === 'success' && amount && !hasSavedDonation.current) {
+      saveDonation(Number(amount), campaignId);
+      hasSavedDonation.current = true;
+    }
+    // Reset flag when status changes away from success
+    if (status !== 'success') {
+      hasSavedDonation.current = false;
+    }
+  }, [status, amount, campaignId]);
 
   const handleDonate = async () => {
     if (!amount || amount <= 0) {

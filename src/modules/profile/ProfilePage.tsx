@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import CharityCard from '@/components/element/CharityCard';
-import { getCharityPoints } from '@/utils/localStorage';
+import { getCharityPoints, getStreak } from '@/utils/localStorage';
 import { useEffect, useState } from 'react';
 import { Wallet, Trophy, Boxes, User, Receipt, ArrowUpRight, Lightbulb, ArrowLeft } from 'lucide-react';
 import { useAccount } from 'wagmi';
@@ -19,9 +19,11 @@ export default function ProfilePage() {
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const [points, setPoints] = useState(0);
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     setPoints(getCharityPoints());
+    setStreak(getStreak());
   }, []);
 
   return (
@@ -84,6 +86,7 @@ export default function ProfilePage() {
                   collected={points} 
                   totalDays={7} 
                   variant="full" 
+                  streak={streak}
                   className="w-full max-w-none shadow-xl bg-white/80 border border-white/50 backdrop-blur-sm"
                   onArrowClick={() => router.push('/profile/achievements')}
                 />

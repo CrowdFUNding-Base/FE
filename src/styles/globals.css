@@ -75,6 +75,16 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Global scrollbar hide */
+html, body, * {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
