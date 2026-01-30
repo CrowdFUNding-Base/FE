@@ -71,7 +71,7 @@ export const CampaignCard = ({
 
             {/* Progress text */}
             <p className="font-sf-semibold text-xs leading-4 text-blue-700">
-              {progress} % Terkumpul
+              {progress}% Raised
             </p>
           </div>
 

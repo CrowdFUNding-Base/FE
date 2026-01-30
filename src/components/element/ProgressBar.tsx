@@ -9,13 +9,13 @@ interface ProgressBarProps {
 
 const formatNumber = (num: number): string => {
   if (num >= 1_000_000_000) {
-    return `${(num / 1_000_000_000).toFixed(1).replace('.0', '')} miliar`;
+    return `${(num / 1_000_000_000).toFixed(1).replace('.0', '')}B`;
   }
   if (num >= 1_000_000) {
-    return `${(num / 1_000_000).toFixed(1).replace('.0', '')} juta`;
+    return `${(num / 1_000_000).toFixed(1).replace('.0', '')}M`;
   }
   if (num >= 1_000) {
-    return `${(num / 1_000).toFixed(1).replace('.0', '')} ribu`;
+    return `${(num / 1_000).toFixed(1).replace('.0', '')}K`;
   }
   return num.toString();
 };
@@ -59,11 +59,11 @@ export default function ProgressBar({
             isCompleted ? 'text-green-500' : 'text-orange-600'
           )}
         >
-          Terkumpul {formatNumber(collected)}
+          Raised {formatNumber(collected)}
         </span>
 
         <span className="text-sm font-sf-medium tracking-[-0.28px] text-blue-700">
-          Diperlukan {formatNumber(total)}
+          Needed {formatNumber(total)}
         </span>
       </div>
     </div>
