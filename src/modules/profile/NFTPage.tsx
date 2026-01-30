@@ -1,24 +1,21 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Wallet, Boxes, Lock } from 'lucide-react';
+import { ArrowLeft, Wallet, Boxes, Lock, Loader2 } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Gradient from '@/components/element/Gradient';
 import Container from '@/components/layout/container';
 import { Button } from '@/components/element/Button';
+import { useBadgesByUser, formatTimestamp } from '@/hooks/useCrowdfunding';
 
 export default function NFTPage() {
   const router = useRouter();
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
 
-  // Mock NFT Data
-  const mockNFTs = [
-    { id: 1, name: 'Supporter Badge #1', image: 'https://placehold.co/400x400/007AFF/ffffff?text=Badge+1' },
-    { id: 2, name: 'Early Adopter', image: 'https://placehold.co/400x400/FF2D55/ffffff?text=Early+Adopter' },
-    { id: 3, name: 'Super Donor', image: 'https://placehold.co/400x400/5856D6/ffffff?text=Super+Donor' },
-  ];
+  // Fetch real badges
+  const { data: badges, isLoading } = useBadgesByUser(address);
 
   return (
     <div className="min-h-screen w-full bg-white flex justify-center">
@@ -34,14 +31,15 @@ export default function NFTPage() {
                   <ArrowLeft className="w-6 h-6 text-gray-800" />
                 </Button>
 
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">NFT</h1>
+                <h1 className="text-2xl font-bold text-gray-900 mb-6">My Badges</h1>
+                
                 {!isConnected ? (
                     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
                         <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mb-6">
                             <Lock className="w-10 h-10 text-gray-400" />
                         </div>
                         <h2 className="text-xl font-bold text-gray-900 mb-2">Connect Wallet</h2>
-                        <p className="text-gray-500 mb-8">You need to connect your wallet to view your NFT collection.</p>
+                        <p className="text-gray-500 mb-8">You need to connect your wallet to view your badge collection.</p>
                         <Button 
                             onClick={openConnectModal}
                             variant="primary"
@@ -63,25 +61,51 @@ export default function NFTPage() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            {mockNFTs.map(nft => (
-                                <div key={nft.id} className="bg-white rounded-2xl p-3 shadow-sm hover:shadow-md transition">
-                                    <div className="aspect-square bg-gray-100 rounded-xl mb-3 overflow-hidden relative">
-                                        {/* Use configured Image domain or just a div fallback if strict */}
-                                        <div className="w-full h-full bg-linear-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-xs p-2 text-center">
-                                            {nft.name}
+                        {isLoading ? (
+                           <div className="flex flex-col items-center justify-center py-20">
+                             <Loader2 className="w-8 h-8 animate-spin text-blue-600 mb-2" />
+                             <p className="text-gray-500">Loading your badges...</p>
+                           </div>
+                        ) : badges && badges.length > 0 ? (
+                            <div className="grid grid-cols-2 gap-4">
+                                {badges.map((badge) => (
+                                    <div key={badge.id} className="bg-white rounded-2xl p-3 shadow-sm hover:shadow-md transition group">
+                                        <div className="aspect-square bg-gray-100 rounded-xl mb-3 overflow-hidden relative">
+                                            {/* Badge Visual */}
+                                            <div className="w-full h-full bg-linear-to-br from-blue-500 to-purple-600 flex flex-col items-center justify-center text-white p-3 text-center relative">
+                                                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition" />
+                                                <Boxes className="w-8 h-8 mb-2 opacity-80" />
+                                                <span className="font-bold text-xs leading-tight">{badge.name}</span>
+                                                <span className="text-[10px] opacity-75 mt-1">#{badge.token_id}</span>
+                                            </div>
                                         </div>
+                                        <h3 className="font-semibold text-gray-900 text-sm truncate">{badge.name}</h3>
+                                        <p className="text-xs text-gray-500 line-clamp-1">{badge.description || 'Campaign Supporter'}</p>
+                                        <p className="text-[10px] text-gray-400 mt-1">
+                                          {formatTimestamp(badge.timestamp).toLocaleDateString()}
+                                        </p>
                                     </div>
-                                    <h3 className="font-semibold text-gray-900 text-sm">{nft.name}</h3>
-                                    <p className="text-xs text-gray-500">CrowdFUNding Collection</p>
-                                </div>
-                            ))}
-                            {/* Add more mock items to fill grid */}
-                            <div className="bg-white/50 border-2 border-dashed border-gray-300 rounded-2xl p-3 flex flex-col items-center justify-center min-h-[160px] text-gray-400 gap-2">
-                                <Boxes className="w-8 h-8 opacity-50" />
-                                <span className="text-xs font-medium">Mint more to see here</span>
+                                ))}
                             </div>
-                        </div>
+                        ) : (
+                            <div className="bg-white/50 border-2 border-dashed border-gray-300 rounded-2xl p-8 flex flex-col items-center justify-center text-center gap-3">
+                                <div className="p-4 bg-gray-100 rounded-full">
+                                  <Boxes className="w-8 h-8 text-gray-400" />
+                                </div>
+                                <div>
+                                  <h3 className="font-semibold text-gray-900">No Badges Yet</h3>
+                                  <p className="text-sm text-gray-500 mt-1">Donate to campaigns to earn your first badge!</p>
+                                </div>
+                                <Button 
+                                  onClick={() => router.push('/home')}
+                                  variant="secondary"
+                                  size="sm"
+                                  className="mt-2"
+                                >
+                                  Browse Campaigns
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
