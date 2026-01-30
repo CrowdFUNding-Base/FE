@@ -113,7 +113,7 @@ export function useCampaignsForUI(options?: { enabled?: boolean; refetchInterval
     // For CampaignCard compatibility
     imageUrl: '/assets/images/placeholder-2.webp',
     title: campaign.name,
-    description: `Campaign by ${campaign.creatorName}`,
+    description: campaign.description || `Campaign by ${campaign.creatorName}`,
     needed: formatIDRX(campaign.targetAmount),
     raised: formatIDRX(campaign.balance),
   })) || [];

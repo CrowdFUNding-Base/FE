@@ -21,7 +21,7 @@ export type TransactionStatus = 'idle' | 'pending' | 'confirming' | 'success' | 
 export interface UseCreateCampaignResult {
   createCampaign: (params: CreateCampaignParams) => Promise<void>;
   status: TransactionStatus;
-  txHash: `0x${string}` | undefined;
+  txHash: `0x${string}` | undefined;  
   error: Error | null;
   reset: () => void;
   isConnected: boolean;
