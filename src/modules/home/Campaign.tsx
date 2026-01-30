@@ -113,22 +113,22 @@ const Campaign = () => {
                             leftIcon={<Search className="w-3.5 h-3.5" />}
                             onClick={handleSearchClick}
                         >
-                          Cari
+                          Search
                         </Button>
                         <Button variant="rounded" size="rounded" leftIcon={<ArrowDown className="w-3.5 h-3.5" />}>
-                          Urutkan
+                          Sort
                         </Button>
                         <Button variant="rounded" size="rounded" leftIcon={<MessageCircleWarning className="w-3.5 h-3.5" />}>
-                          Prioritas
+                          Priority
                         </Button>
                         <Button variant="rounded" size="rounded" leftIcon={<Siren className="w-3.5 h-3.5" />}>
-                          Bencana
+                          Disaster
                         </Button>
                         <Button variant="rounded" size="rounded" leftIcon={<BookOpen className="w-3.5 h-3.5" />}>
-                          Pendidikan
+                          Education
                         </Button>
                         <Button variant="rounded" size="rounded" leftIcon={<HeartPulse className="w-3.5 h-3.5" />}>
-                          Kesehatan
+                          Health
                         </Button>
                     </div>
                     
@@ -164,7 +164,7 @@ const Campaign = () => {
                                 <Loader2 className="w-12 h-12 text-cyan-500 mb-3 animate-spin" />
                                 <p className="text-lg font-sf-semibold text-gray-600 mb-1">Memuat Campaign...</p>
                                 <p className="text-sm font-sf-regular text-gray-400">
-                                    Mengambil data dari blockchain
+                                    Fetching data from the blockchain, please wait a moment.
                                 </p>
                             </div>
                         ) : error ? (

@@ -52,7 +52,7 @@ const Login = () => {
                                 onClick= {() => router.push("/home")}
                                 className="w-full"
                             >
-                                Masuk Sebagai Guest
+                                Login as a Guest
                             </Button>
                             
                           

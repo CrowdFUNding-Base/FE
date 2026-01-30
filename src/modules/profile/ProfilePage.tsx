@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import CharityCard from '@/components/element/CharityCard';
 import { getCharityPoints, getStreak } from '@/utils/localStorage';
 import { useEffect, useState } from 'react';
-import { Wallet, Trophy, Boxes, User, Receipt, ArrowUpRight, Lightbulb, ArrowLeft } from 'lucide-react';
+import { Wallet, Trophy, Boxes, User, Receipt, ArrowUpRight, Lightbulb, ArrowLeft, Plus } from 'lucide-react';
 import { useAccount } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Gradient from '@/components/element/Gradient';
@@ -36,12 +36,13 @@ export default function ProfilePage() {
               <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
                 <Button 
-                  variant="black" 
-                  size="sm" 
-                  leftIcon={<Lightbulb className="w-3.5 h-3.5" />} 
-                  className="px-3.5"
+                    variant="black" 
+                    size="sm" 
+                    leftIcon={<Plus className="w-3.5 h-3.5" />} 
+                    className="px-3.5"
+                    onClick={() => router.push("/campaign/create")}
                 >
-                   Tips
+                    Create
                 </Button>
               </div>
 
@@ -62,7 +63,7 @@ export default function ProfilePage() {
                         <Button 
                           onClick={openConnectModal}
                           variant="primary"
-                          size="rounded"
+                          size="md"
                           leftIcon={<Wallet className="w-4 h-4" />}
                           className="shadow-md"
                         >
@@ -83,19 +84,17 @@ export default function ProfilePage() {
                 
                 {/* Charity Card */}
                 <CharityCard 
-                  collected={points} 
-                  totalDays={7} 
-                  variant="full" 
-                  streak={streak}
-                  className="w-full max-w-none shadow-xl bg-white/80 border border-white/50 backdrop-blur-sm"
-                  onArrowClick={() => router.push('/profile/achievements')}
+                    collected={points} 
+                    streak={streak} 
+                    totalDays={100}
+                    onArrowClick={() => router.push('/profile/achievements')}
+                    className="z-10"
                 />
-
                 {/* Navigation Cards */}
                 <div className="grid grid-cols-2 gap-4">
                     <button 
                       onClick={() => router.push('/profile/achievements')}
-                      className="bg-white/80 backdrop-blur-sm p-6 rounded-3xl shadow-lg border border-white/50 flex flex-col items-center gap-3 active:scale-95 transition"
+                      className="bg-white/80 backdrop-blur-3xl p-6 rounded-3xl shadow-lg border border-white/50 flex flex-col items-center gap-3 active:scale-95 transition"
                     >
                         <div className="p-3 bg-yellow-100 rounded-full text-yellow-600">
                             <Trophy className="w-8 h-8" />

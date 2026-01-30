@@ -11,6 +11,7 @@ export interface Campaign {
   balance: string;
   targetAmount: string;
   creationTime: number;
+  description?: string;
   lastSyncedAt?: string;
 }
 

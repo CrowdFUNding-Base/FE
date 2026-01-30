@@ -222,14 +222,13 @@ export default function LoginForm({ variant = "login", onSubmit, className }: Lo
                         )}
 
                         {/* Social Login Buttons */}
-                        <div className="flex gap-3 w-full">
+                        <div className="flex gap-3 w-full flex-col min-w-sm">
                             <Button
                                 variant="secondary"
                                 size="md"
                                 type="button"
                                 onClick={handleGoogleLogin}
                                 disabled={isLoading}
-                                className="flex-1"
                             >
                                 {isLoading ? 'Loading...' : 'Google'}
                             </Button>
@@ -239,7 +238,6 @@ export default function LoginForm({ variant = "login", onSubmit, className }: Lo
                                 type="button"
                                 onClick={handleWeb3Login}
                                 disabled={isLoading}
-                                className="flex-1"
                             >
                                 {isConnected ? `Connected: ${address?.slice(0, 6)}...` : isLoading ? 'Connecting...' : 'Web3 Wallet'}
                             </Button>

@@ -36,6 +36,7 @@ const CreateCampaign = () => {
         await createCampaign({
             name: data.title,
             creatorName: data.creator,
+            description: data.description,
             targetAmount: Number(data.targetAmount),
         });
     };

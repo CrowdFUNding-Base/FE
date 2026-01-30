@@ -85,7 +85,7 @@ const CampaignPage = ({ campaignId }: CampaignPageProps) => {
                                 </Button>
                                  {/* Header */}
                                 <div className="flex-1 text-center my-3 ">
-                                    <h1 className="text-lg font-sf-semibold text-white">Donasi</h1>
+                                    <h1 className="text-lg font-sf-semibold text-black">Donasi</h1>
                                 </div>
                             </div>
 
@@ -103,7 +103,7 @@ const CampaignPage = ({ campaignId }: CampaignPageProps) => {
                             />
                         </div>
                         <div className="flex flex-row items-center justify-between gap-3">
-                            <h2 className="text-2xl font-sf-semibold text-zinc-900">
+                            <h2 className="text-2xl font-sf-semibold text-black">
                                 {campaign.name}
                             </h2>
                             <Bookmark className="w-6 h-6 text-[#B6B6B6]" />
@@ -111,29 +111,39 @@ const CampaignPage = ({ campaignId }: CampaignPageProps) => {
                         <div className="flex">
                             <ProgressBar collected={raised} total={needed} />
                         </div>
-                        <div className="flex flex-col gap-2">
-                            <h3 className="font-sf-semibold text-zinc-900 text-lg">
+                        <div className="flex flex-row justify-between -mt-3 gap-1">
+                            <h3 className="font-sf-semibold text-black text-lg">
                                 Creator
                             </h3>
                             <p className="text-zinc-700 text-sm font-sf-regular">
                                 {campaign.creatorName || 'Unknown'}
                             </p>
                         </div>
+                        {campaign.description && (
+                            <div className="flex flex-col gap-2">
+                                <h3 className="font-sf-semibold text-black text-lg">
+                                    Deskripsi
+                                </h3>
+                                <p className="text-black text-sm font-sf-regular">
+                                    {campaign.description}
+                                </p>
+                            </div>
+                        )}
                         <div className="flex flex-col gap-3 bg-white/80 p-4 rounded-xl">
-                            <h3 className="font-sf-semibold text-zinc-900 text-lg">
+                            <h3 className="font-sf-semibold text-black text-lg">
                                 Campaign Info
                             </h3>
                             <div className="flex justify-between text-sm">
                                 <span className="text-zinc-600 font-sf-regular">Raised:</span>
-                                <span className="font-sf-medium text-zinc-900">{formatIDRXCurrency(campaign.balance)}</span>
+                                <span className="font-sf-medium text-black">{formatIDRXCurrency(campaign.balance)}</span>
                             </div>
                             <div className="flex justify-between text-sm">
                                 <span className="text-zinc-600 font-sf-regular">Target:</span>
-                                <span className="font-sf-medium text-zinc-900">{formatIDRXCurrency(campaign.targetAmount)}</span>
+                                <span className="font-sf-medium text-black">{formatIDRXCurrency(campaign.targetAmount)}</span>
                             </div>
                             <div className="flex justify-between text-sm">
                                 <span className="text-zinc-600 font-sf-regular">Progress:</span>
-                                <span className="font-sf-medium text-cyan-600">{progress}%</span>
+                                <span className="font-sf-medium text-blue-400">{progress}%</span>
                             </div>
                         </div>
                         </div>

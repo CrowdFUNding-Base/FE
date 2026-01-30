@@ -12,6 +12,7 @@ const CAMPAIGN_CONTRACT = CONTRACTS.baseSepolia.CAMPAIGN;
 export interface CreateCampaignParams {
   name: string;
   creatorName: string;
+  description?: string;
   targetAmount: number; // In IDRX display format (e.g., 1000 = Rp 1000)
 }
 
