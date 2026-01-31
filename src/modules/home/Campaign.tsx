@@ -138,7 +138,7 @@ const Campaign = () => {
                             <InputField
                                 value={searchQuery}
                                 onChange={handleSearchChange}
-                                placeholder="Cari berdasarkan judul, deskripsi, tag, atau creator..."
+                                placeholder="Search by title, description, tag, or creator..."
                                 variant="search"
                                 type="search"
                                 leftIcon={<Search className="w-5 h-5" />}
@@ -152,7 +152,7 @@ const Campaign = () => {
                                         </button>
                                     ) : undefined
                                 }
-                                helperText={searchQuery ? `${filteredCampaigns.length} hasil ditemukan` : ''}
+                                helperText={searchQuery ? `${filteredCampaigns.length} results found` : ''}
                                 className="w-full"
                             />
                         </div>
@@ -162,7 +162,7 @@ const Campaign = () => {
                         {isLoading ? (
                             <div className="flex flex-col items-center justify-center py-12 text-center">
                                 <Loader2 className="w-12 h-12 text-cyan-500 mb-3 animate-spin" />
-                                <p className="text-lg font-sf-semibold text-gray-600 mb-1">Memuat Campaign...</p>
+                                <p className="text-lg font-sf-semibold text-gray-600 mb-1">Loading Campaigns...</p>
                                 <p className="text-sm font-sf-regular text-gray-400">
                                     Fetching data from the blockchain, please wait a moment.
                                 </p>
@@ -172,9 +172,9 @@ const Campaign = () => {
                                 <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-3">
                                     <X className="w-6 h-6 text-red-500" />
                                 </div>
-                                <p className="text-lg font-sf-semibold text-gray-600 mb-1">Gagal Memuat Data</p>
+                                <p className="text-lg font-sf-semibold text-gray-600 mb-1">Failed to Load Data</p>
                                 <p className="text-sm font-sf-regular text-gray-400">
-                                    {error.message || 'Terjadi kesalahan saat mengambil data'}
+                                    {error.message || 'An error occurred while fetching data'}
                                 </p>
                             </div>
                         ) : filteredCampaigns.length > 0 ? (
@@ -195,12 +195,12 @@ const Campaign = () => {
                             <div className="flex flex-col items-center justify-center py-12 text-center">
                                 <Search className="w-12 h-12 text-gray-300 mb-3" />
                                 <p className="text-lg font-sf-semibold text-gray-600 mb-1">
-                                    {searchQuery ? 'Tidak ada hasil' : 'Belum ada campaign'}
+                                    {searchQuery ? 'No results' : 'No campaigns yet'}
                                 </p>
                                 <p className="text-sm font-sf-regular text-gray-400">
                                     {searchQuery 
-                                        ? 'Coba kata kunci lain untuk pencarian Anda'
-                                        : 'Jadilah yang pertama membuat campaign!'
+                                        ? 'Try different keywords for your search'
+                                        : 'Be the first to create a campaign!'
                                     }
                                 </p>
                             </div>

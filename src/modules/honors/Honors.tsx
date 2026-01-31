@@ -130,9 +130,9 @@ export default function Honors() {
                     <div className="p-4 bg-gray-100 rounded-full mb-4">
                       <Users className="w-8 h-8 text-gray-400" />
                     </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Belum Ada Data</h3>
+                    <h3 className="font-semibold text-gray-900 mb-2">No Data Yet</h3>
                     <p className="text-gray-500 text-sm">
-                      Jadilah yang pertama berdonasi dan masuk leaderboard!
+                      Be the first to donate and get on the leaderboard!
                     </p>
                   </div>
                 )}

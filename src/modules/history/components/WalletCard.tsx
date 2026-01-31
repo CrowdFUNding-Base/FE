@@ -63,7 +63,7 @@ export const WalletCard = ({ isConnected }: WalletCardProps) => {
         ) : (
           <div className="flex justify-between items-end relative z-10">
             <div>
-              <p className="text-sm font-sf-medium text-gray-800 mb-1">Total Donasi</p>
+              <p className="text-sm font-sf-medium text-gray-800 mb-1">Total Donated</p>
               <p className="text-lg font-sf-bold text-gray-900">
                 {donations && donations.length > 0 
                   ? formatIDRXCurrency(totalDonated)
@@ -71,7 +71,7 @@ export const WalletCard = ({ isConnected }: WalletCardProps) => {
               </p>
             </div>
             <div className="text-right">
-              <p className="text-sm font-sf-medium text-gray-800 mb-1">Saldo IDRX</p>
+              <p className="text-sm font-sf-medium text-gray-800 mb-1">IDRX Balance</p>
               <p className="text-lg font-sf-bold text-gray-900">
                 {idrxBalance 
                   ? `Rp ${Number(idrxBalance.formatted).toLocaleString('id-ID')}`
@@ -84,7 +84,7 @@ export const WalletCard = ({ isConnected }: WalletCardProps) => {
         {/* Empty state hint */}
         {!isLoading && (!donations || donations.length === 0) && isConnected && (
           <p className="text-xs text-gray-500 mt-3 text-center italic">
-            Belum ada riwayat donasi
+            No donation history yet
           </p>
         )}
       </div>

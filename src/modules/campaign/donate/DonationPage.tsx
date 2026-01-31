@@ -120,7 +120,7 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
         campaign_id: Number(campaignId),
         amount: Number(amount),
         customer_details: {
-          first_name: 'Donatur',
+          first_name: 'Donor',
           email: 'donatur@crowdfunding.id',
         },
       });
@@ -195,8 +195,8 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                 <CheckCircle className="w-10 h-10 text-green-600" />
               </div>
               <div className="text-center">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Terima Kasih!</h2>
-               <p className="text-gray-600">Donasi {formatDisplayAmount(Number(amount))} berhasil diterima!</p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Thank You!</h2>
+               <p className="text-gray-600">Donation of {formatDisplayAmount(Number(amount))} received successfully!</p>
               </div>
               {txHash && (
                 <a 
@@ -205,7 +205,7 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                   rel="noopener noreferrer"
                   className="text-cyan-600 underline text-sm"
                 >
-                  Lihat di BaseScan →
+                  View on BaseScan →
                 </a>
               )}
               <Button
@@ -214,7 +214,7 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                 size="lg"
                 className="w-full rounded-xl shadow-lg"
               >
-                Kembali ke Campaign
+                Back to Campaign
               </Button>
             </div>
           </Container>
@@ -235,8 +235,8 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                 <AlertCircle className="w-10 h-10 text-red-600" />
               </div>
               <div className="text-center">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Transaksi Gagal</h2>
-                <p className="text-gray-600 text-sm">{cryptoError?.message || 'Terjadi kesalahan'}</p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Transaction Failed</h2>
+                <p className="text-gray-600 text-sm">{cryptoError?.message || 'An error occurred'}</p>
               </div>
               <Button
                 onClick={reset}
@@ -244,7 +244,7 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                 size="lg"
                 className="w-full rounded-xl shadow-lg"
               >
-                Coba Lagi
+                Try Again
               </Button>
             </div>
           </Container>
@@ -265,9 +265,9 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                 <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
               </div>
               <div className="text-center">
-                <h2 className="text-xl font-bold text-gray-900 mb-2">Menunggu Pembayaran</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-2">Waiting for Payment</h2>
                 <p className="text-gray-600 text-sm mb-4">
-                  Silakan selesaikan pembayaran di tab yang terbuka. Halaman ini akan otomatis update.
+                  Please complete payment in the opened tab. This page will update automatically.
                 </p>
                 <p className="text-xs text-gray-400">
                   Order ID: {qrisOrderId}
@@ -280,7 +280,7 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                   size="sm"
                   className="rounded-xl"
                 >
-                  Buka Halaman Pembayaran
+                  Open Payment Page
                 </Button>
               )}
               <Button
@@ -295,11 +295,11 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                       saveDonation(Number(amount), campaignId);
                     } else {
                       setQrisStatus('pending');
-                      alert(response.data.message || 'Pembayaran belum selesai');
+                      alert(response.data.message || 'Payment pending');
                     }
                   } catch (err: any) {
                     setQrisStatus('pending');
-                    alert(err.response?.data?.message || 'Gagal cek status');
+                    alert(err.response?.data?.message || 'Failed to check status');
                   }
                 }}
                 variant="primary"
@@ -310,10 +310,10 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                 {qrisStatus === 'checking' ? (
                   <span className="flex items-center gap-2">
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Mengecek...
+                    Checking...
                   </span>
                 ) : (
-                  'Cek Status Pembayaran'
+                  'Check Payment Status'
                 )}
               </Button>
               <Button
@@ -322,7 +322,7 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                 size="sm"
                 className="text-gray-500"
               >
-                Batalkan
+                Cancel
               </Button>
             </div>
           </Container>
@@ -348,7 +348,7 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
               <ArrowLeft className="w-6 h-6 text-gray-800" />
             </Button>
 
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Donasi</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Donate</h1>
             {campaign && (
               <p className="text-gray-600 mb-6">{campaign.name}</p>
             )}
@@ -385,9 +385,9 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                 <div className="flex items-start gap-3">
                   <QrCode className="w-6 h-6 text-green-600 shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-semibold text-green-800 text-sm">Tidak Perlu Wallet</p>
+                    <p className="font-semibold text-green-800 text-sm">No Wallet Needed</p>
                     <p className="text-green-700 text-xs mt-1">
-                      Bayar dengan QRIS dari aplikasi bank atau e-wallet manapun. Dana akan otomatis dikonversi ke IDRX.
+                      Pay with QRIS from any bank app or e-wallet. Funds are automatically converted to IDRX.
                     </p>
                   </div>
                 </div>
@@ -401,7 +401,7 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                   <div className="p-2 bg-blue-100 rounded-lg">
                     <Wallet className="w-6 h-6 text-blue-600" />
                   </div>
-                  <span className="text-sm font-medium text-gray-700">Connect wallet untuk donasi {paymentMethod}</span>
+                  <span className="text-sm font-medium text-gray-700">Connect wallet to donate {paymentMethod}</span>
                 </div>
                 <Button 
                   onClick={openConnectModal}
@@ -418,7 +418,7 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
             {isCrypto && isConnected && (
               <div className="bg-white/60 backdrop-blur-md rounded-2xl p-4 shadow-sm flex flex-col gap-2 border border-white/50 mb-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500">Saldo {paymentMethod} Kamu</span>
+                  <span className="text-sm text-gray-500">Your {paymentMethod} Balance</span>
                   <span className="text-sm font-medium text-gray-900">
                     {paymentMethod === 'IDRX' 
                       ? formatIDRXCurrency(formattedBalance * 100)
@@ -435,7 +435,7 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Nominal Donasi {paymentMethod === 'USDC' ? '(USD)' : '(Rupiah)'}
+                    Donation Amount {paymentMethod === 'USDC' ? '(USD)' : '(Rp)'}
                   </label>
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">
@@ -503,14 +503,14 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                   {isProcessing ? (
                     <span className="flex items-center gap-2">
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      {qrisLoading && 'Membuat QRIS...'}
+                      {qrisLoading && 'Creating QRIS...'}
                       {cryptoStatus === 'approving' && `Approving ${paymentMethod}...`}
-                      {cryptoStatus === 'donating' && 'Confirm di wallet...'}
-                      {cryptoStatus === 'confirming' && 'Mengonfirmasi...'}
+                      {cryptoStatus === 'donating' && 'Confirm in wallet...'}
+                      {cryptoStatus === 'confirming' && 'Confirming...'}
                     </span>
                   ) : (
                     <>
-                      {paymentMethod === 'QRIS' ? 'Bayar dengan QRIS' : 'Donasi Sekarang'}
+                      {paymentMethod === 'QRIS' ? 'Pay with QRIS' : 'Donate Now'}
                     </>
                   )}
                 </Button>
