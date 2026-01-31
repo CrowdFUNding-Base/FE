@@ -78,7 +78,7 @@ const CampaignPage = ({ campaignId }: CampaignPageProps) => {
                                 <Button 
                                     variant={"black"}
                                     size={"sm"}
-                                    onClick={() => router.back()}
+                                    onClick={() => router.push('/home')}
                                     className="absolute left-0"
                                 >
                                     ←
@@ -119,7 +119,7 @@ const CampaignPage = ({ campaignId }: CampaignPageProps) => {
                                 {campaign.creatorName || 'Unknown'}
                             </p>
                         </div>
-                        {campaign.description && (
+                        {/* {campaign.description && (
                             <div className="flex flex-col gap-2">
                                 <h3 className="font-sf-semibold text-black text-lg">
                                     Deskripsi
@@ -128,7 +128,7 @@ const CampaignPage = ({ campaignId }: CampaignPageProps) => {
                                     {campaign.description}
                                 </p>
                             </div>
-                        )}
+                        )} */}
                         <div className="flex flex-col gap-3 bg-white/80 p-4 rounded-xl">
                             <h3 className="font-sf-semibold text-black text-lg">
                                 Campaign Info
