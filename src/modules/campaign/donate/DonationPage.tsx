@@ -145,8 +145,21 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
       alert('Please enter a valid amount');
       return;
     }
+    
+    // Warning for large USDC amounts (likely mistake)
+    if (paymentMethod === 'USDC' && amount > 1000) {
+      const confirmed = confirm(
+        `⚠️ Are you sure you want to donate $${amount.toLocaleString()} USD?\n\n` +
+        `This is a very large amount. For reference:\n` +
+        `• $100 USD ≈ Rp 1,600,000\n` +
+        `• $1,000 USD ≈ Rp 16,000,000\n\n` +
+        `Click OK to proceed, or Cancel to change the amount.`
+      );
+      if (!confirmed) return;
+    }
+    
     if (amount > formattedBalance) {
-      alert(`Insufficient ${paymentMethod} balance`);
+      alert(`Insufficient ${paymentMethod} balance\n\nYour balance: ${formattedBalance.toLocaleString()} ${paymentMethod}\nTrying to donate: ${amount.toLocaleString()} ${paymentMethod}`);
       return;
     }
 
@@ -394,6 +407,21 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
               </div>
             )}
 
+            {/* USDC Info Banner */}
+            {paymentMethod === 'USDC' && (
+              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-4">
+                <div className="flex items-start gap-3">
+                  <CreditCard className="w-6 h-6 text-blue-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold text-blue-800 text-sm">💵 Donasi dalam USD</p>
+                    <p className="text-blue-700 text-xs mt-1">
+                      USDC adalah stablecoin dengan nilai $1 USD = Rp 16,000. Pastikan amount sudah benar sebelum konfirmasi!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Wallet Connect prompt (only for crypto) */}
             {isCrypto && !isConnected && (
               <div className="bg-white/60 backdrop-blur-md rounded-2xl p-4 shadow-sm flex items-center justify-between border border-white/50 mb-4">
@@ -450,6 +478,18 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                       className="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-xl text-lg font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition disabled:opacity-50"
                     />
                   </div>
+                  
+                  {/* USDC Amount Warning */}
+                  {paymentMethod === 'USDC' && amount && amount > 0 && (
+                    <div className="mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
+                      <p className="text-xs text-yellow-800">
+                        💡 <strong>${amount.toLocaleString()} USD</strong> ≈ <strong>Rp {(amount * 16000).toLocaleString()}</strong>
+                      </p>
+                      <p className="text-xs text-yellow-700 mt-1">
+                        (Asumsi rate: $1 = Rp 16,000)
+                      </p>
+                    </div>
+                  )}
                   
                   {/* Quick amount buttons */}
                   {paymentMethod !== 'USDC' && (

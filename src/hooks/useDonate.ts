@@ -76,7 +76,14 @@ export function useDonate(tokenAddress: Address, decimals: number): UseDonateRes
 
   // Status Updates: Confirming
   useEffect(() => {
-    if ((isApproveConfirming || isDonateConfirming) && status !== 'confirming') {
+    // Set to confirming when waiting for transaction receipt
+    // But don't override 'donating' status (which means approval success, waiting for user to confirm donate tx)
+    if ((isApproveConfirming || isDonateConfirming) && status !== 'confirming' && status !== 'donating') {
+      setStatus('confirming');
+    }
+    
+    // When donate transaction is being confirmed, set to confirming
+    if (isDonateConfirming && status === 'donating') {
       setStatus('confirming');
     }
   }, [isApproveConfirming, isDonateConfirming, status]);
@@ -85,7 +92,7 @@ export function useDonate(tokenAddress: Address, decimals: number): UseDonateRes
   useEffect(() => {
     // 1. Approval Success -> Trigger Donation
     if (isApproveSuccess && status === 'confirming' && pendingDonation) {
-      console.log('Approval confirmed, keeping flow active for donation...');
+      console.log('Approval confirmed, auto-triggering donation...');
       // IMPORTANT: Do NOT set status to success here. 
       // Switch immediately to donating status for UI feedback
       setStatus('donating'); 
@@ -103,7 +110,9 @@ export function useDonate(tokenAddress: Address, decimals: number): UseDonateRes
     }
 
     // 2. Donation Success -> Final State
-    if (isDonateSuccess && status === 'confirming') {
+    // FIX: Check for both 'confirming' and 'donating' status
+    if (isDonateSuccess && (status === 'confirming' || status === 'donating')) {
+      console.log('Donation confirmed successfully!');
       setStatus('success');
       invalidateCampaigns();
     }
