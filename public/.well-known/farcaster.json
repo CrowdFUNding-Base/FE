@@ -26,6 +26,9 @@
       "https://crowdfunding-base.vercel.app/assets/images/Screenshot-1.png",
       "https://crowdfunding-base.vercel.app/assets/images/Screenshot-2.png",
       "https://crowdfunding-base.vercel.app/assets/images/Screenshot-3.png"
-    ]
+    ],
+    "ogTitle": "CrowdFUNding",
+    "ogDescription": "Crowdfunding platform with gamification",
+    "ogImageUrl": "https://crowdfunding-base.vercel.app/assets/images/og-image.png"
   }
 }
