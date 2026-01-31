@@ -116,9 +116,8 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
 
     setQrisLoading(true);
     try {
-      // Get vault_id from campaign (we'll use campaign ID as vault reference)
       const response = await api.post('/crowdfunding/contribution/qris', {
-        vault_id: `campaign-${campaignId}`,
+        campaign_id: Number(campaignId),
         amount: Number(amount),
         customer_details: {
           first_name: 'Donatur',
