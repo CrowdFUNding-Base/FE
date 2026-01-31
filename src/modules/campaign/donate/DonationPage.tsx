@@ -284,6 +284,39 @@ export default function DonationPage({ campaignId }: DonationPageProps) {
                 </Button>
               )}
               <Button
+                onClick={async () => {
+                  if (!qrisOrderId) return;
+                  setQrisStatus('checking');
+                  try {
+                    const response = await api.post(`/crowdfunding/contribution/qris-status/${qrisOrderId}`);
+                    if (response.data.success) {
+                      setQrisStatus('success');
+                      setQrisTxHash(response.data.data.donation?.donateTxHash);
+                      saveDonation(Number(amount), campaignId);
+                    } else {
+                      setQrisStatus('pending');
+                      alert(response.data.message || 'Pembayaran belum selesai');
+                    }
+                  } catch (err: any) {
+                    setQrisStatus('pending');
+                    alert(err.response?.data?.message || 'Gagal cek status');
+                  }
+                }}
+                variant="primary"
+                size="lg"
+                disabled={qrisStatus === 'checking'}
+                className="w-full rounded-xl shadow-lg"
+              >
+                {qrisStatus === 'checking' ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Mengecek...
+                  </span>
+                ) : (
+                  'Cek Status Pembayaran'
+                )}
+              </Button>
+              <Button
                 onClick={reset}
                 variant="secondary"
                 size="sm"
