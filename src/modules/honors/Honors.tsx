@@ -1,26 +1,23 @@
 'use client';
 
-import { useMemo } from 'react';
-import { Lightbulb } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Lightbulb, Loader2, Trophy, Users } from 'lucide-react';
 import Container from '@/components/layout/container';
 import { Button, LeaderboardCard } from '@/components';
 import { cn } from '@/utils/helpers/cn';
+import api from '@/utils/api/axios';
 
-// Mock data for leaderboard
-const mockLeaderboardData = [
-  { id: 1, name: 'John Doe', avatarUrl: '/assets/images/avatar-1.png', coinCount: 20 },
-  { id: 2, name: 'Jane Smith', avatarUrl: '/assets/images/avatar-2.png', coinCount: 18 },
-  { id: 3, name: 'Alex Johnson', avatarUrl: '/assets/images/avatar-3.png', coinCount: 20 },
-  { id: 4, name: 'Maria Garcia', avatarUrl: '/assets/images/avatar-4.png', coinCount: 15 },
-  { id: 5, name: 'David Brown', avatarUrl: '/assets/images/avatar-5.png', coinCount: 20 },
-  { id: 6, name: 'Sarah Wilson', avatarUrl: '/assets/images/avatar-6.png', coinCount: 12 },
-  { id: 7, name: 'Michael Lee', avatarUrl: '/assets/images/avatar-7.png', coinCount: 11 },
-  { id: 8, name: 'Emily Davis', avatarUrl: '/assets/images/avatar-8.png', coinCount: 10 },
-  { id: 9, name: 'Chris Taylor', avatarUrl: '/assets/images/avatar-9.png', coinCount: 9 },
-  { id: 10, name: 'Lisa Anderson', avatarUrl: '/assets/images/avatar-10.png', coinCount: 8 },
-];
+// Leaderboard entry type
+interface LeaderboardEntry {
+  rank: number;
+  walletAddress: string;
+  name: string;
+  charityPoints: number;
+  streak: number;
+  totalDonated: string;
+}
 
-// Mock data for honor cards
+// Honor cards (static for now)
 const honorCards = [
   { id: 1, color: 'bg-purple-200', label: 'Achievement 1' },
   { id: 2, color: 'bg-yellow-100', label: 'Achievement 2' },
@@ -30,13 +27,33 @@ const honorCards = [
 ];
 
 export default function Honors() {
-  // Sort by highest points
-  const sortedLeaderboard = useMemo(() => {
-    return [...mockLeaderboardData].sort((a, b) => b.coinCount - a.coinCount);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isEmpty, setIsEmpty] = useState(false);
+
+  // Fetch leaderboard from API
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        setIsLoading(true);
+        const response = await api.get('/crowdfunding/leaderboard?limit=20');
+        if (response.data.success) {
+          setLeaderboard(response.data.data);
+          setIsEmpty(response.data.meta?.isEmpty || response.data.data.length === 0);
+        }
+      } catch (error) {
+        console.error('Failed to fetch leaderboard:', error);
+        setLeaderboard([]);
+        setIsEmpty(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLeaderboard();
   }, []);
 
   const handleTipsClick = () => {
-    // TODO: Implement tips modal or something ?,
     console.log('Tips clicked');
   };
 
@@ -44,7 +61,7 @@ export default function Honors() {
     <div className="min-h-screen w-full bg-white flex justify-center">
       <div className="w-full max-w-lg bg-white relative h-screen overflow-hidden flex flex-col shadow-2xl">
         {/* Background */}
-        <div className="absolute inset-0 -z-10 bg-[#FAFAFA]"> {/* Fallback or base color if needed */}
+        <div className="absolute inset-0 -z-10 bg-[#FAFAFA]">
             {/* Base gradient */}
             <div className="absolute inset-0 bg-linear-to-b from-blue-100 via-cyan-50 to-blue-100" />
             
@@ -73,7 +90,7 @@ export default function Honors() {
                 </div>
 
                 {/* Honor Cards */}
-                <div className="relative -mx-4 px-4 mb-8"> {/* Adjusted negative margin for smaller container padding */}
+                <div className="relative -mx-4 px-4 mb-8">
                 <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
                     {honorCards.map((card) => (
                     <div
@@ -94,25 +111,51 @@ export default function Honors() {
 
                 {/* Leaderboard */}
                 <div className="flex flex-col gap-4">
-                <h2 className="text-xl font-sf-bold text-gray-900">Leaderboard</h2>
+                <div className="flex items-center gap-2">
+                  <Trophy className="w-5 h-5 text-yellow-500" />
+                  <h2 className="text-xl font-sf-bold text-gray-900">Leaderboard</h2>
+                </div>
+
+                {/* Loading State */}
+                {isLoading && (
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <Loader2 className="w-8 h-8 animate-spin text-cyan-600 mb-3" />
+                    <p className="text-gray-500">Loading leaderboard...</p>
+                  </div>
+                )}
+
+                {/* Empty State */}
+                {!isLoading && isEmpty && (
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <div className="p-4 bg-gray-100 rounded-full mb-4">
+                      <Users className="w-8 h-8 text-gray-400" />
+                    </div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Belum Ada Data</h3>
+                    <p className="text-gray-500 text-sm">
+                      Jadilah yang pertama berdonasi dan masuk leaderboard!
+                    </p>
+                  </div>
+                )}
 
                 {/* Leaderboard List */}
-                <div className="flex flex-col gap-2">
-                    {sortedLeaderboard.map((user, index) => (
-                    <div key={user.id} className="flex items-center gap-3">
-                        <span className="text-xl font-sf-bold text-gray-400 w-6 text-center shrink-0">
-                        {index + 1}
-                        </span>
-                        <LeaderboardCard
-                        name={user.name}
-                        avatarUrl={user.avatarUrl}
-                        coinCount={user.coinCount}
-                        showRank={false}
-                        className="flex-1"
-                        />
-                    </div>
-                    ))}
-                </div>
+                {!isLoading && !isEmpty && (
+                  <div className="flex flex-col gap-2">
+                      {leaderboard.map((user) => (
+                      <div key={user.walletAddress} className="flex items-center gap-3">
+                          <span className="text-xl font-sf-bold text-gray-400 w-6 text-center shrink-0">
+                          {user.rank}
+                          </span>
+                          <LeaderboardCard
+                          name={user.name}
+                          avatarUrl={`https://api.dicebear.com/7.x/identicon/svg?seed=${user.walletAddress}`}
+                          coinCount={user.charityPoints}
+                          showRank={false}
+                          className="flex-1"
+                          />
+                      </div>
+                      ))}
+                  </div>
+                )}
                 </div>
             </div>
         </Container>
