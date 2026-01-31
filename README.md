@@ -135,6 +135,18 @@ flowchart LR
 | **Authentication** | Google OAuth | Secure social login |
 | **Wallet** | RainbowKit | Web3 wallet connection |
 | **State** | TanStack Query | Server state management |
+| **Farcaster** | MiniApp SDK | Native Farcaster integration (Frames v2) |
+
+---
+
+## Farcaster Integration (Base App)
+
+This application is fully optimized as a **Farcaster Mini-App (Frames v2)**, allowing users to interact with the platform directly within Farcaster clients like Warpcast. 
+
+### Features
+- **Native Experience**: Runs seamlessly inside Farcaster as a full-screen mini-app.
+- **Direct Context**: Accesses user context and wallet connection directly from the Farcaster client.
+- **Social Graph**: Leverages the Farcaster social graph for enhanced community features.
 
 ---
 
