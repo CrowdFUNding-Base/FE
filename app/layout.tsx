@@ -11,6 +11,9 @@ import Web3Provider from "@/components/Contexts/Web3Provider";
 export const metadata: Metadata = {
   title: "crowdFUNding",
   description: "Crowdfunding platform with gamification",
+  other: {
+    "base:app_id": "697e04f5c6a03f3fe39cb5ce",
+  },
 };
 
 export default function RootLayout({
