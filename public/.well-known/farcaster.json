@@ -1,0 +1,31 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "CrowdFUNding",
+    "iconUrl": "https://crowdfunding-base.vercel.app/assets/images/logo.png",
+    "homeUrl": "https://crowdfunding-base.vercel.app",
+    "imageUrl": "https://crowdfunding-base.vercel.app/assets/images/og-image.png",
+    "buttonTitle": "Donate Now",
+    "splashImageUrl": "https://crowdfunding-base.vercel.app/assets/images/splash.png",
+    "splashBackgroundColor": "#2569ED",
+    "webhookUrl": "https://be-production-c561.up.railway.app/webhook/frame",
+    "primaryCategory": "finance",
+    "tags": ["finance",
+      "fundraising",
+      "donation",
+      "crowdfunding"
+    ],
+    "tagline": "Donate. Evolve. Impact.",
+    "heroImageUrl": "https://crowdfunding-base.vercel.app/assets/images/hero.png",
+    "screenshotUrls": [
+      "https://crowdfunding-base.vercel.app/assets/images/Screenshot-1.png",
+      "https://crowdfunding-base.vercel.app/assets/images/Screenshot-2.png",
+      "https://crowdfunding-base.vercel.app/assets/images/Screenshot-3.png"
+    ]
+  }
+}
